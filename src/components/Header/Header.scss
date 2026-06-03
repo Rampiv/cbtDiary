@@ -1,0 +1,119 @@
+@use '../../styles/style.scss' as *;
+
+.header {
+  background: $white;
+  border-bottom: 1px solid $borderLight;
+  box-shadow: $shadowLight;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  &__inner {
+    @include flexible();
+    & {
+      margin: 0 auto;
+      padding: 5px 10px;
+      gap: 20px;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &__icon {
+    padding: 5px;
+    max-width: 48px;
+    max-height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px $shadowLight);
+  }
+
+  &__nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: $background;
+    padding: 4px;
+    border-radius: 12px;
+  }
+
+  &__item {
+    @include textType08();
+    & {
+      padding: 0;
+    }
+
+    a {
+      display: block;
+      padding: 8px 15px;
+      color: $subText;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: $main;
+        background: rgba($main, 0.05);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      // Активная ссылка
+      &.active {
+        background: $white;
+        color: $main;
+        font-weight: 600;
+        box-shadow: $shadowLight;
+      }
+    }
+  }
+
+  &__logout {
+    @include textType08();
+    & {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid $borderMedium;
+      border-radius: 8px;
+      color: $subTextDark;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      background: $errorBg;
+      border-color: $errorBorder;
+      color: $errorText;
+      box-shadow: $shadowLight;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

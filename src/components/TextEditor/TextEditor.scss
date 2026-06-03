@@ -1,0 +1,46 @@
+.text-editor {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+
+  .editor-toolbar {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    background: #f9f9f9;
+    display: flex;
+    gap: 8px;
+
+    button {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #eee;
+      }
+
+      &.is-active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+    }
+  }
+
+  .editor-content {
+    padding: 16px;
+    min-height: 200px;
+    outline: none;
+
+    /* Стилизация содержимого редактора */
+    p { margin-bottom: 0.5em; }
+    ul { padding-left: 1.5em; }
+    strong { font-weight: bold; }
+    em { font-style: italic; }
+    u { text-decoration: underline; }
+  }
+}

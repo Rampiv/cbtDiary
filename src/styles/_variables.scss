@@ -1,0 +1,44 @@
+@use 'sass:color';
+
+// Базовые цвета
+$white: #fff;
+$black: #000;
+
+// Основные цвета бренда
+$main: #2319ee;
+$mainLight: #c3cfe2;
+$mainDark: #1f2937;
+
+// Текст
+$text: #23272e;
+$subText: #6b7280;
+$subTextDark: #374151;
+
+// Фоны
+$background: #f3f4f6;
+$fill: rgba($black, 0.15);
+$fillSecondary: rgba($black, 0.06);
+$fillTertiary: rgba($black, 0.04);
+
+// Состояния для $main (hover, disabled, shadows)
+$mainHover: #1f17b2;
+$mainDisabled: #a5b4fc;
+$mainShadow: rgba(79, 70, 229, 0.1);
+
+// Состояния ошибок
+$errorBg: #fef2f2;
+$errorBorder: #fecaca;
+$errorText: #b91c1c;
+
+// Границы и разделители
+$borderLight: #e5e7eb;
+$borderMedium: #d1d5db;
+$dividerText: #9ca3af;
+
+// Disabled состояния
+$disabledBg: #f9fafb;
+$disabledOpacity: 0.7;
+
+// Тени
+$shadowLight: rgba(0, 0, 0, 0.08);
+$shadowMedium: rgba(0, 0, 0, 0.1);

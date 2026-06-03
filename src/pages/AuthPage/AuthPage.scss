@@ -1,0 +1,262 @@
+@use '../../styles/style.scss' as *;
+
+.auth {
+  &__wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $mainLight;
+    padding: 20px;
+  }
+
+  &__card {
+    background: $white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px $shadowLight;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    animation: auth-fade-in 0.4s ease-out;
+  }
+
+  @keyframes auth-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    @include textType15();
+    & {
+      font-weight: 700;
+      color: $mainDark;
+      margin: 0 0 8px 0;
+    }
+  }
+
+  &__subtitle {
+    @include textType08();
+    & {
+      color: $subText;
+      margin: 0;
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    background: $background;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 15px;
+  }
+
+  &__tab {
+    @include textType1();
+    & {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: $subText;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    &:not(.auth__tab--active):hover {
+      color: $subTextDark;
+    }
+
+    &--active {
+      background: $white;
+      color: $main;
+      box-shadow: 0 1px 3px $shadowMedium;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__error {
+    @include textType08();
+    & {
+      background: $errorBg;
+      border: 1px solid $errorBorder;
+      color: $errorText;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  }
+
+  &__field {
+    margin-bottom: 15px;
+    position: relative;
+  }
+
+  &__label {
+    @include textType08();
+    & {
+      display: block;
+      font-weight: 500;
+      color: $subTextDark;
+      margin-bottom: 6px;
+    }
+  }
+
+  &__input {
+    @include textType08();
+    & {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid $borderMedium;
+      border-radius: 8px;
+      color: $mainDark;
+      box-sizing: border-box;
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $main;
+      box-shadow: 0 0 0 3px $mainShadow;
+    }
+
+    &:disabled {
+      background: $disabledBg;
+      cursor: not-allowed;
+    }
+  }
+
+  &__toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(0%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $subText;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition:
+      color 0.2s,
+      background 0.2s;
+
+    &:hover:not(:disabled) {
+      color: $main;
+      background: $fillTertiary;
+    }
+
+    &:disabled {
+      opacity: $disabledOpacity;
+      cursor: not-allowed;
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__submit {
+    @include textType1();
+    & {
+      width: 100%;
+      padding: 12px;
+      background: $main;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    &:hover:not(:disabled) {
+      background: $mainHover;
+    }
+
+    &:disabled,
+    &--loading {
+      background: $mainDisabled;
+      cursor: not-allowed;
+    }
+  }
+
+  &__divider {
+    @include textType08();
+    & {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 24px 0;
+      color: $dividerText;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid $borderLight;
+    }
+  }
+
+  &__divider-text {
+    padding: 0 12px;
+  }
+
+  &__social-btn {
+    @include textType08();
+    & {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      background: $white;
+      border: 1px solid $borderMedium;
+      border-radius: 8px;
+      font-weight: 500;
+      color: $subTextDark;
+      cursor: pointer;
+      transition:
+        background 0.2s,
+        border-color 0.2s;
+    }
+
+    &:hover:not(:disabled) {
+      background: $disabledBg;
+      border-color: $dividerText;
+    }
+
+    &:disabled,
+    &--disabled {
+      opacity: $disabledOpacity;
+      cursor: not-allowed;
+    }
+  }
+
+  &__social-icon {
+    flex-shrink: 0;
+  }
+}

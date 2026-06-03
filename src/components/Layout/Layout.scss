@@ -1,0 +1,12 @@
+@use '../../styles/style.scss' as *;
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__content {
+    flex: 1;
+    padding: 20px;
+  }
+}

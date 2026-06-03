@@ -94,3 +94,12 @@ section {
     position: relative;
   }
 }
+.marginNone {
+  margin: 0 !important;
+}
+
+@media (max-width: 480px){
+  .layout__content{
+    padding: 5px;
+  }
+}

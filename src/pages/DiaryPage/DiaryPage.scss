@@ -1,0 +1,1227 @@
+@use '../../styles/style.scss' as *;
+
+/* ==========================================================================
+   СТРАНИЦА ДНЕВНИКА (DiaryPage)
+   ========================================================================== */
+
+.diary-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+
+  /* Пустое состояние */
+  &__empty {
+    text-align: center;
+    padding: 60px 16px;
+
+    h2 {
+      @include textType15();
+      & {
+        color: $text;
+        margin: 0 0 16px 0;
+      }
+    }
+  }
+  &__loader {
+    @include textType1();
+    & {
+      color: $subText;
+      font-weight: 500;
+    }
+  }
+  &__create-btn {
+    @include textType1();
+    & {
+      padding: 10px 24px;
+      background: $main;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: $mainHover;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  /* Верхняя навигация (список страниц + кнопка создания) */
+  &__top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+
+  &__top-nav-left {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__pages-list {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 3px 0;
+    max-width: 400px;
+    scrollbar-width: thin;
+    scrollbar-color: $borderMedium transparent;
+
+    &::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $borderMedium;
+      border-radius: 2px;
+
+      &:hover {
+        background: $subText;
+      }
+    }
+  }
+
+  &__nav-btn {
+    @include textType08();
+    & {
+      padding: 8px 12px;
+      min-width: 36px;
+      background: $white;
+      border: 1px solid $borderMedium;
+      border-radius: 6px;
+      color: $text;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      &:hover {
+        border-color: $main;
+        color: $main;
+      }
+
+      &--active {
+        background: $main;
+        border-color: $main;
+        color: $white;
+
+        &:hover {
+          background: $mainHover;
+          color: $white;
+        }
+      }
+    }
+  }
+
+  /* Навигация по мыслям */
+  &__thoughts-nav {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  &__thought-btn {
+    @include textType08();
+    & {
+      padding: 6px 12px;
+      background: $background;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: $subText;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+
+      &:hover {
+        background: $white;
+        color: $main;
+      }
+
+      &--active {
+        background: $white;
+        color: $main;
+        border-color: $main;
+        font-weight: 600;
+        box-shadow: $shadowLight;
+      }
+    }
+  }
+
+  /* Контент страницы */
+  &__content {
+    background: $background;
+    border-radius: 10px;
+    padding: 16px;
+  }
+}
+
+/* ==========================================================================
+   СТРАНИЦА "ВЫЯВЛЕНИЕ" (RevealPage)
+   ========================================================================== */
+
+.reveal-page {
+  /* Подсказки */
+  &__hint {
+    @include textType08();
+    & {
+      color: $subText;
+      margin: 0 0 8px 0;
+      line-height: 1.4;
+    }
+  }
+
+  /* Поля формы */
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__field-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  &__label {
+    @include textType08();
+    & {
+      font-weight: 600;
+      color: $text;
+    }
+  }
+
+  /* Кнопка с информацией (?) */
+  &__info-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: $background;
+    border: 1px solid $borderMedium;
+    color: $subText;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+
+    &:hover {
+      background: $main;
+      border-color: $main;
+      color: $white;
+    }
+  }
+
+  /* Мобильный заголовок колонки (скрыт на десктопе) */
+  &__mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid $borderLight;
+
+    span {
+      @include textType08();
+      font-weight: 600;
+      color: $main;
+    }
+  }
+
+  /* Таблица мыслей */
+  &__thoughts-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 16px 0;
+    border: 1px solid $borderLight;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &__table-col {
+    padding: 10px;
+    border-right: 1px solid $borderLight;
+    vertical-align: top;
+    min-width: 0;
+    width: 33.333%;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    .text-editor {
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+
+      .editor-toolbar {
+        flex-wrap: wrap;
+      }
+
+      .editor-content {
+        min-height: 80px;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+    }
+
+    &_header {
+      background-color: $background;
+    }
+  }
+
+  &__col-header {
+    @include textType08();
+    & {
+      font-weight: 600;
+      color: $text;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      word-break: break-word;
+      line-height: 1.3;
+    }
+  }
+
+  &__col-header-mobile {
+    display: none;
+  }
+
+  &__col-info-btn-wrap {
+    display: none;
+  }
+
+  /* Список эмоций */
+  &__emotions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__emotion-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background: $background;
+    border-radius: 6px;
+    border: 1px solid $borderLight;
+  }
+
+  &__emotion-top {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  &__emotion-input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid $borderMedium;
+    border-radius: 6px;
+    font-size: 13px;
+    color: $text;
+    min-width: 0;
+
+    &:focus {
+      outline: none;
+      border-color: $main;
+      box-shadow: 0 0 0 2px $mainShadow;
+    }
+  }
+
+  &__emotion-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: 1px solid $borderMedium;
+    border-radius: 6px;
+    color: $subText;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+
+    &:hover {
+      background: $errorBg;
+      border-color: $errorBorder;
+      color: $errorText;
+    }
+  }
+
+  &__add-emotion-btn {
+    @include textType08();
+    & {
+      width: 100%;
+      padding: 6px 10px;
+      background: transparent;
+      border: 1px dashed $borderMedium;
+      border-radius: 6px;
+      color: $subText;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+
+      &:hover {
+        border-color: $main;
+        color: $main;
+        background: rgba($main, 0.05);
+      }
+    }
+  }
+
+  /* Кнопка добавления мысли */
+  &__add-btn {
+    @include textType08();
+    & {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 2px dashed $borderMedium;
+      border-radius: 8px;
+      color: $subText;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: $main;
+        color: $main;
+        background: rgba($main, 0.05);
+      }
+    }
+  }
+
+  /* Кнопки "Работать с мыслью" */
+  &__actions {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__work-btn {
+    @include textType1();
+    & {
+      padding: 10px;
+      background: $main;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: $mainHover;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   СТРАНИЦА "РАБОТА С МЫСЛЬЮ" (ThoughtWorkPage)
+   ========================================================================== */
+
+.thought-work-page {
+  /* Подсказки */
+  &__hint {
+    @include textType08();
+    & {
+      color: $subText;
+      margin: 0 0 12px 0;
+      line-height: 1.4;
+    }
+  }
+
+  /* Поля формы */
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__field-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  &__info-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: $background;
+    border: 1px solid $borderMedium;
+    color: $subText;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: $main;
+      border-color: $main;
+      color: $white;
+    }
+  }
+
+  /* Поля со слайдерами */
+  &__slider-field {
+    margin-top: 12px;
+
+    label {
+      @include textType08();
+      & {
+        display: block;
+        font-weight: 500;
+        color: $text;
+        margin-bottom: 6px;
+      }
+    }
+  }
+
+  /* Двухколоночная сетка */
+  &__two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  &__col {
+    label {
+      @include textType08();
+      & {
+        display: block;
+        font-weight: 500;
+        color: $text;
+        margin-bottom: 6px;
+      }
+    }
+  }
+
+  /* Сводка (таблица с автоматической мыслью, эмоциями и поведением) */
+  &__summary-table {
+    margin-bottom: 16px;
+    border: 1px solid $borderLight;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &__summary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  &__summary-col {
+    padding: 12px;
+    border-right: 1px solid $borderLight;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    strong {
+      @include textType08();
+      & {
+        display: block;
+        font-weight: 600;
+        color: $text;
+        margin-bottom: 6px;
+      }
+    }
+  }
+
+  &__summary-content {
+    @include textType08();
+    & {
+      color: $subText;
+      line-height: 1.4;
+    }
+  }
+
+  &__emotion-list {
+    margin: 0;
+    padding-left: 18px;
+    list-style: disc;
+
+    li {
+      margin-bottom: 3px;
+    }
+  }
+
+  &__empty {
+    color: $subText;
+    font-style: italic;
+  }
+
+  /* Блок с изначальной мыслью */
+  &__original-thought {
+    @include textType08();
+    & {
+      padding: 10px;
+      background: $background;
+      border-radius: 6px;
+      color: $text;
+      font-style: italic;
+    }
+  }
+
+  /* Блок катастрофизации */
+  &__catastrophizing {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Таблица в модалке */
+  &__modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+
+    th,
+    td {
+      padding: 6px 10px;
+      border: 1px solid $borderLight;
+      text-align: left;
+    }
+
+    th {
+      background: $background;
+      font-weight: 600;
+      color: $text;
+    }
+
+    td {
+      color: $subText;
+    }
+  }
+
+  /* Кнопка перехода к следующей мысли */
+  &__next-btn {
+    @include textType1();
+    & {
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: $main;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: $mainHover;
+        transform: translateX(4px);
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   КНОПКИ УДАЛЕНИЯ И МОДАЛКИ
+   ========================================================================== */
+
+.diary-page {
+  &__nav-btn--delete {
+    background: $errorBorder;
+    border-color: rgba($error, 0.5);
+    color: $errorText;
+
+    &:hover {
+      background: $errorBg;
+      border-color: $errorText;
+      color: $errorText;
+    }
+  }
+
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+
+  &__modal {
+    background: $white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+    h3 {
+      @include textType1();
+      & {
+        margin: 0 0 12px 0;
+        color: $text;
+        font-weight: 600;
+      }
+    }
+
+    p {
+      @include textType08();
+      & {
+        margin: 0 0 20px 0;
+        color: $subText;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  &__modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  &__modal-btn {
+    @include textType08();
+    & {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+
+      &--cancel {
+        background: $background;
+        color: $text;
+        border: 1px solid $borderMedium;
+
+        &:hover {
+          background: $white;
+          border-color: $text;
+        }
+      }
+
+      &--delete {
+        background: $errorBg;
+        color: $errorText;
+        border: 1px solid $errorBorder;
+
+        &:hover {
+          background: $errorText;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+.reveal-page {
+  &__delete-thought-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid $errorBorder;
+    border-radius: 6px;
+    color: $errorText;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    flex-shrink: 0;
+
+    &:hover {
+      background: $errorBg;
+      border-color: $errorText;
+    }
+    &_desctop {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+
+  &__desktop-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+
+  &__mobile-header-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  &__action-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  &__work-btn {
+    flex: 1;
+  }
+
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+
+  &__modal {
+    background: $white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+    h3 {
+      @include textType1();
+      & {
+        margin: 0 0 12px 0;
+        color: $text;
+        font-weight: 600;
+      }
+    }
+
+    p {
+      @include textType08();
+      & {
+        margin: 0 0 20px 0;
+        color: $subText;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  &__modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  &__modal-btn {
+    @include textType08();
+    & {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+
+      &--cancel {
+        background: $background;
+        color: $text;
+        border: 1px solid $borderMedium;
+
+        &:hover {
+          background: $white;
+          border-color: $text;
+        }
+      }
+
+      &--delete {
+        background: $errorBg;
+        color: $errorText;
+        border: 1px solid $errorBorder;
+
+        &:hover {
+          background: $errorText;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+// Адаптивность для кнопок удаления
+@media (max-width: 650px) {
+  .reveal-page {
+    &__desktop-actions {
+      display: none;
+    }
+
+    &__action-row {
+      flex-direction: row;
+    }
+
+    &__delete-thought-btn {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+@media (min-width: 651px) {
+  .reveal-page {
+    &__mobile-header {
+      .reveal-page__delete-thought-btn {
+        display: none;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   АДАПТИВНОСТЬ
+   ========================================================================== */
+
+/* Планшеты (до 1024px) */
+@media (max-width: 1024px) {
+  .diary-page {
+    padding: 14px;
+
+    &__content {
+      padding: 14px;
+    }
+  }
+
+  .reveal-page {
+    &__table-col {
+      padding: 8px;
+
+      .text-editor {
+        .editor-content {
+          min-height: 70px;
+          max-height: 140px;
+        }
+      }
+    }
+
+    &__emotion-block {
+      padding: 8px;
+    }
+  }
+
+  .thought-work-page {
+    &__summary-col {
+      padding: 10px;
+    }
+
+    &__two-col {
+      gap: 10px;
+    }
+  }
+}
+
+/* Мобильные (до 650px) — таблица становится вертикальной */
+@media (max-width: 650px) {
+  .diary-page {
+    padding: 12px;
+
+    &__empty {
+      padding: 40px 12px;
+    }
+
+    &__content {
+      padding: 12px;
+    }
+
+    &__top-nav {
+      gap: 8px;
+    }
+
+    &__pages-list {
+      max-width: 300px;
+    }
+
+    &__thoughts-nav {
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    &__top-nav-left {
+    flex-direction: column;
+    align-items: flex-start;
+    }
+  }
+
+  .reveal-page {
+    /* Скрываем десктопный заголовок таблицы */
+    thead {
+      display: none;
+    }
+
+    /* Каждая строка становится карточкой */
+    tbody tr {
+      display: block;
+      border: 1px solid $borderLight;
+      border-radius: 8px;
+      overflow: hidden;
+      background: $white;
+      &:not(:last-child) {
+        margin-bottom: 30px;
+      }
+    }
+
+    /* Ячейки становятся блоками */
+    &__table-col {
+      display: block;
+      border-right: none;
+      border-bottom: 1px solid $borderLight;
+      padding: 12px;
+      width: 100%;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      /* Показываем мобильные заголовки с кнопками "?" */
+      .reveal-page__mobile-header {
+        display: flex;
+      }
+
+      .text-editor {
+        .editor-content {
+          min-height: 60px;
+          max-height: 120px;
+        }
+      }
+
+      div {
+        .reveal-page__hint {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    &__thoughts-table {
+      margin: 12px 0;
+      border: none;
+    }
+
+    &__emotion-block {
+      padding: 8px;
+    }
+
+    &__add-btn {
+      margin-bottom: 12px;
+    }
+  }
+
+  .thought-work-page {
+    &__two-col {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    &__summary-row {
+      grid-template-columns: 1fr;
+    }
+
+    &__summary-col {
+      border-right: none;
+      border-bottom: 1px solid $borderLight;
+      padding: 10px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    &__summary-table {
+      margin-bottom: 12px;
+    }
+
+    &__catastrophizing {
+      gap: 12px;
+    }
+  }
+}
+
+/* Маленькие мобильные (до 480px) */
+@media (max-width: 480px) {
+  .diary-page {
+    padding: 10px;
+
+    &__empty {
+      padding: 30px 10px;
+
+      h2 {
+        font-size: 18px;
+      }
+    }
+
+    &__create-btn {
+      padding: 8px 20px;
+      font-size: 13px;
+    }
+
+    &__content {
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    &__pages-list {
+      max-width: 200px;
+      gap: 3px;
+    }
+
+    &__nav-btn {
+      padding: 6px 10px;
+      min-width: 32px;
+      font-size: 12px;
+    }
+
+    &__thoughts-nav {
+      gap: 3px;
+      margin-bottom: 10px;
+    }
+
+    &__thought-btn {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+  }
+
+  .reveal-page {
+    &__hint {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    &__field {
+      margin-bottom: 12px;
+    }
+
+    &__table-col {
+      padding: 10px;
+    }
+
+    &__mobile-header {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+
+      span {
+        font-size: 13px;
+      }
+    }
+
+    &__emotion-block {
+      padding: 6px;
+      gap: 5px;
+    }
+
+    &__emotion-input {
+      padding: 5px 8px;
+      font-size: 12px;
+    }
+
+    &__emotion-remove {
+      width: 22px;
+      height: 22px;
+    }
+
+    &__add-emotion-btn {
+      padding: 5px 8px;
+      font-size: 12px;
+    }
+
+    &__add-btn {
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    &__work-btn {
+      padding: 8px;
+      font-size: 13px;
+    }
+  }
+
+  .thought-work-page {
+    &__hint {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    &__field {
+      margin-bottom: 12px;
+    }
+
+    &__slider-field {
+      margin-top: 10px;
+
+      label {
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+    }
+
+    &__summary-col {
+      padding: 8px;
+
+      strong {
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+    }
+
+    &__summary-content {
+      font-size: 12px;
+    }
+
+    &__emotion-list {
+      padding-left: 16px;
+      font-size: 12px;
+
+      li {
+        margin-bottom: 2px;
+      }
+    }
+
+    &__original-thought {
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    &__modal-table {
+      margin: 8px 0;
+
+      th,
+      td {
+        padding: 5px 8px;
+        font-size: 11px;
+      }
+    }
+
+    &__next-btn {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 13px;
+    }
+  }
+}

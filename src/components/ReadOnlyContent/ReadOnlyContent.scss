@@ -1,0 +1,40 @@
+@use '../../styles/style.scss' as *;
+
+.read-only-content {
+  @include textType08();
+  & {
+    color: $text;
+    line-height: 1.6;
+  }
+
+  .ProseMirror {
+    outline: none;
+    padding: 0;
+    background: transparent;
+
+    p {
+      margin: 0 0 8px 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul, ol {
+      padding-left: 1.5em;
+      margin: 0;
+    }
+
+    strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    u {
+      text-decoration: underline;
+    }
+  }
+}

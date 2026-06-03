@@ -2,26 +2,65 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Color from '@tiptap/extension-color'
-import './TextEditor.scss'
 import { TextStyle } from '@tiptap/extension-text-style'
+import './TextEditor.scss'
+import { useEffect, useMemo } from 'react'
 
 interface TextEditorProps {
   content: any
   onChange: (json: any) => void
+  onBlur?: () => void
+  placeholder?: string
+  editorId?: string
 }
 
-export const TextEditor = ({ content, onChange }: TextEditorProps) => {
+export const TextEditor = ({
+  content,
+  onChange,
+  onBlur,
+  placeholder,
+  editorId,
+}: TextEditorProps) => {
+  const extensions = useMemo(
+    () => [
+      StarterKit.configure({
+        underline: false,
+      }),
+      Underline.configure(),
+      TextStyle.configure(),
+      Color.configure(),
+    ],
+    []
+  )
+
   const editor = useEditor({
-    extensions: [StarterKit, Underline, TextStyle, Color],
+    extensions,
     content: content,
     onUpdate: ({ editor }) => {
       onChange(editor.getJSON())
     },
+    onBlur: () => {
+      onBlur?.()
+    },
+    editorProps: {
+      attributes: {
+        'data-placeholder': placeholder || '',
+      },
+    },
   })
 
-  if (!editor) {
-    return null
-  }
+  useEffect(() => {
+    if (!editor) return
+
+    const currentContent = JSON.stringify(editor.getJSON())
+    const newContent = JSON.stringify(content || { type: 'doc', content: [] })
+
+    if (currentContent !== newContent) {
+      editor.commands.setContent(content)
+    }
+  }, [editor, content])
+
+  if (!editor) return null
 
   return (
     <div className="text-editor">
@@ -31,21 +70,21 @@ export const TextEditor = ({ content, onChange }: TextEditorProps) => {
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? 'is-active' : ''}
         >
-          Жирный
+          <b>Ж</b>
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? 'is-active' : ''}
         >
-          Курсив
+          <i>К</i>
         </button>
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={editor.isActive('underline') ? 'is-active' : ''}
         >
-          Подчеркнутый
+          <u>П</u>
         </button>
         <button
           type="button"
@@ -55,7 +94,6 @@ export const TextEditor = ({ content, onChange }: TextEditorProps) => {
           Список
         </button>
       </div>
-
       <div className="editor-content">
         <EditorContent editor={editor} />
       </div>

@@ -9,8 +9,8 @@ export const Header = () => {
   const location = useLocation()
 
   const tabs = [
-    { title: 'На главную', link: '/' },
-    { title: 'Дневник', link: '/diary' },
+    { title: 'Профиль', link: '/profile' },
+    { title: 'Дневник', link: '/' },
     { title: 'FAQ', link: '/FAQ' },
   ]
 

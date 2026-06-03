@@ -1,0 +1,42 @@
+@use '../../styles/style.scss' as *;
+
+.save-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 44px;
+  height: 44px;
+  background: $disabledBg;
+  border: 1px solid $borderMedium;
+  border-radius: 8px;
+  color: $subTextDark;
+  cursor: not-allowed;
+  transition: all 0.2s ease;
+
+  &--active {
+    background: $main;
+    border-color: $main;
+    color: $white;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba($main, 0.3);
+
+    &:hover {
+      background: $mainHover;
+      border-color: $mainHover;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($main, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__text {
+    @include textType08();
+    & {
+      font-weight: 500;
+    }
+  }
+}

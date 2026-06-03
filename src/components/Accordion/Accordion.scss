@@ -1,0 +1,78 @@
+@use '../../styles/style.scss' as *;
+
+.accordion {
+  background: $white;
+  border: 1px solid $borderLight;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: $shadowLight;
+  }
+
+  &__header {
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+
+    &:hover {
+      background: $fillTertiary;
+    }
+  }
+
+  &__header-content {
+    flex: 1;
+  }
+
+  &__title {
+    @include textType1();
+    & {
+      font-weight: 600;
+      color: $text;
+      margin: 0;
+    }
+  }
+
+  &__description {
+    @include textType08();
+    & {
+      color: $subText;
+      margin: 4px 0 0 0;
+      line-height: 1.5;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: $subText;
+    transition: transform 0.3s ease;
+  }
+
+  &--open &__icon {
+    transform: rotate(180deg);
+  }
+
+  &__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  &--open &__content {
+    max-height: 5000px;
+  }
+
+  &__body {
+    padding: 0 20px 20px 20px;
+  }
+}

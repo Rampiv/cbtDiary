@@ -1,3 +1,4 @@
+@use '../../styles/style.scss' as *;
 .text-editor {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -33,14 +34,36 @@
 
   .editor-content {
     padding: 16px;
-    min-height: 200px;
+    min-height: 50px;
     outline: none;
 
     /* Стилизация содержимого редактора */
-    p { margin-bottom: 0.5em; }
-    ul { padding-left: 1.5em; }
-    strong { font-weight: bold; }
-    em { font-style: italic; }
-    u { text-decoration: underline; }
+    ul {
+      padding-left: 1.5em;
+    }
+    strong {
+      font-weight: bold;
+    }
+    em {
+      font-style: italic;
+    }
+    u {
+      text-decoration: underline;
+    }
+    .ProseMirror {
+      p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: $subText;
+        pointer-events: none;
+        height: 0;
+      }
+      min-height: 50px;
+      outline: none;
+
+      > * + * {
+        margin-top: 0.75em;
+      }
+    }
   }
 }

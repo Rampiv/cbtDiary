@@ -20,7 +20,7 @@ export const useDiary = (pageId: string) => {
       setHasChanges(false)
       setIsSaving(false)
       return
-    }
+    } 
 
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current)

@@ -11,6 +11,7 @@ export const Header = () => {
   const tabs = [
     { title: 'Профиль', link: '/profile' },
     { title: 'Дневник', link: '/' },
+    { title: 'Полезное', link: '/helpful' },
     { title: 'FAQ', link: '/FAQ' },
   ]
 

@@ -64,7 +64,7 @@ export const RevealPage = ({
       >
         <div className="reveal-page__field">
           <div className="reveal-page__field-header">
-            <label className="reveal-page__label">Ситуация*</label>
+            <label className="reveal-page__label">Ситуация</label>
             <button
               type="button"
               className="reveal-page__info-btn"
@@ -304,14 +304,6 @@ export const RevealPage = ({
               >
                 Работать с мыслью {index + 1}
               </button>
-              <button
-                type="button"
-                className="reveal-page__delete-thought-btn"
-                onClick={() => setShowDeleteConfirm(thought.id)}
-                title="Удалить мысль"
-              >
-                🗑️
-              </button>
             </div>
           ))}
         </div>
@@ -420,7 +412,34 @@ export const RevealPage = ({
           onClose={() => setShowHeaderBehaviorModal(false)}
           title="Поведенческая реакция"
         >
-          <p>Про копинг-стратегии (страница 232)</p>
+          <p>Ваша поведенческая реакиция на событие</p>
+          <p>
+            <strong>Подсказка:</strong>
+          </p>
+          <ul>
+            <li>Бей</li>
+            <li>Беги</li>
+            <li>Замри</li>
+          </ul>
+          <p>Копинг-стратегии</p>
+          <ul>
+            <li>Избегать негативных эмоций</li>
+           <li> Показывать яркие эмоции (например, привлекать внимание)</li>
+           <li>Пытаться быть совершенным</li>
+           <li>специально казаться некомпетентным и беззащитным</li>
+           <li>Быть слишком ответственным</li>
+           <li>Избегать ответственности</li>
+           <li>Искать признание</li>
+           <li>Избегать внимания</li>
+           <li>Избегать конфронтации</li>
+           <li>Провоцировать других</li>
+           <li>Пытаться контролировать ситуация</li>
+           <li>Передавать контроль другим</li>
+           <li>Вести себя инфантильно</li>
+           <li>Вести себя авторитарно</li>
+           <li>Пытаться угодить другим</li>
+           <li>Отдаляться от других или пытаться удовлетворить только себя</li>
+          </ul>
         </InfoModal>
       ))}
     </div>

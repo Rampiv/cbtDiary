@@ -97,7 +97,6 @@ export const DiaryPage = () => {
     if (success) {
       setShowDeleteConfirm(false)
       setShowToast(true)
-      // currentPageId сбросится автоматически через onValue
     }
   }
 
@@ -129,6 +128,10 @@ export const DiaryPage = () => {
         {showToast && <ToastPortal message="Сохранено" onClose={() => setShowToast(false)} />}
         <div className="diary-page__empty">
           <h2>У вас пока нет записей</h2>
+          <span>
+            Пожалуйста, ознакомьтесь с инструкцией по работе с дневником в разделе{' '}
+            <strong>FAQ</strong>.
+          </span>
           <button type="button" className="diary-page__create-btn" onClick={handleCreatePage}>
             Создать первую страницу
           </button>

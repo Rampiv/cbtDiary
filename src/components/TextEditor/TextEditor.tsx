@@ -3,8 +3,47 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Color from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
+import { BulletList } from '@tiptap/extension-bullet-list'
+import { OrderedList } from '@tiptap/extension-ordered-list'
+import { ListItem } from '@tiptap/extension-list-item'
+import { useEffect, useRef } from 'react'
 import './TextEditor.scss'
-import { useEffect, useMemo } from 'react'
+
+
+// Подавление предупреждений о дублировании расширений
+const originalWarn = console.warn
+console.warn = function (...args) {
+  if (args[0]?.includes?.('Duplicate extension names found')) {
+    return
+  }
+  originalWarn.apply(console, args)
+}
+
+const CustomBulletList = BulletList.extend({
+  addInputRules() {
+    return []
+  },
+})
+
+const CustomOrderedList = OrderedList.extend({
+  addInputRules() {
+    return []
+  },
+})
+
+const extensions = [
+  StarterKit.configure({
+    bulletList: false,
+    orderedList: false,
+    listItem: false,
+  }),
+  CustomBulletList,
+  CustomOrderedList,
+  ListItem,
+  Underline.configure(),
+  TextStyle.configure(),
+  Color.configure(),
+]
 
 interface TextEditorProps {
   content: any
@@ -14,30 +53,17 @@ interface TextEditorProps {
   editorId?: string
 }
 
-export const TextEditor = ({
-  content,
-  onChange,
-  onBlur,
-  placeholder,
-  editorId,
-}: TextEditorProps) => {
-  const extensions = useMemo(
-    () => [
-      StarterKit.configure({
-        underline: false,
-      }),
-      Underline.configure(),
-      TextStyle.configure(),
-      Color.configure(),
-    ],
-    []
-  )
+export const TextEditor = ({ content, onChange, onBlur, placeholder }: TextEditorProps) => {
+  const lastEmittedRef = useRef<any>(null)
+  const isInitialMount = useRef(true)
 
   const editor = useEditor({
     extensions,
     content: content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getJSON())
+      const json = editor.getJSON()
+      lastEmittedRef.current = json
+      onChange(json)
     },
     onBlur: () => {
       onBlur?.()
@@ -52,12 +78,21 @@ export const TextEditor = ({
   useEffect(() => {
     if (!editor) return
 
-    const currentContent = JSON.stringify(editor.getJSON())
-    const newContent = JSON.stringify(content || { type: 'doc', content: [] })
-
-    if (currentContent !== newContent) {
-      editor.commands.setContent(content)
+    if (isInitialMount.current) {
+      lastEmittedRef.current = content
+      isInitialMount.current = false
+      return
     }
+
+    const newContentStr = JSON.stringify(content)
+    const lastEmittedStr = JSON.stringify(lastEmittedRef.current)
+
+    if (newContentStr === lastEmittedStr) {
+      return
+    }
+
+    lastEmittedRef.current = content
+    editor.commands.setContent(content)
   }, [editor, content])
 
   if (!editor) return null
@@ -85,13 +120,6 @@ export const TextEditor = ({
           className={editor.isActive('underline') ? 'is-active' : ''}
         >
           <u>П</u>
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'is-active' : ''}
-        >
-          Список
         </button>
       </div>
       <div className="editor-content">

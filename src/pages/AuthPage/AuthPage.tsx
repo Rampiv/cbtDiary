@@ -85,15 +85,12 @@ export const AuthPage = () => {
               <img src={DiaryIcon} alt="Дневник мыслей" className="auth__front-icon" />
               <h1 className="auth__front-title">Дневник мыслей</h1>
               <p className="auth__front-description">
-                {/* Здесь ваше описание */}
-                Место для вашего описания приложения. Расскажите пользователям, что это за дневник,
-                какие возможности он предоставляет и почему им стоит попробовать.
+                Это приложение создано для людей, которые проходят когнитивно-поведенческую терапию
+                (КПТ) или занимаются самонаблюдением. Оно помогает структурировать работу с
+                автоматическими мыслями, эмоциями и поведенческими реакциями — ключевыми элементами
+                дневника КПТ.
               </p>
-              <button
-                type="button"
-                className="auth__front-btn"
-                onClick={handleFlip}
-              >
+              <button type="button" className="auth__front-btn" onClick={handleFlip}>
                 Авторизация
               </button>
             </div>

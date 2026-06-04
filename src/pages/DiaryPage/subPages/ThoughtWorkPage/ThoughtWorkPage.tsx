@@ -336,7 +336,7 @@ export const ThoughtWorkPage = ({
         <div className="thought-work-page__field">
           <label>Изначальная мысль:</label>
           <div className="thought-work-page__original-thought">
-            {work.reformulation.originalThought || 'Не заполнено'}
+            {work.specification && <ReadOnlyContent content={work.specification} />|| work.reformulation.originalThought || 'Не заполнено'}
           </div>
         </div>
         <div className="thought-work-page__field">
@@ -374,7 +374,7 @@ export const ThoughtWorkPage = ({
       {/* Аккордеон 8: Мысль реальна */}
       <Accordion title="Мысль реальна">
         <p className="thought-work-page__hint">
-          Что мне делать дальше? Какие шаги мне следует сделать, чтобы что-то поменять? Каковы рамки
+          Если мысль соответствует реальности. Что мне делать дальше? Какие шаги мне следует сделать, чтобы что-то поменять? Каковы рамки
           моей ответственности?
         </p>
         <TextEditor
@@ -441,6 +441,9 @@ export const ThoughtWorkPage = ({
             </tr>
           </tbody>
         </table>
+        <p>
+          <strong>Иногда мысль широкая, обхватывает множество областей, попробуйте её конкретизировать</strong>
+        </p>
       </InfoModal>
     </div>
   )

@@ -1,0 +1,58 @@
+@use '../../styles/style.scss' as *;
+
+.faq-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 5px 16px 24px;
+
+  &__title {
+    @include textType15();
+    & {
+      color: $text;
+      margin: 0 0 24px 0;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  // Аккордионы внутри FAQ
+  .accordion {
+    margin-bottom: 12px;
+  }
+
+  // Стили для текста внутри аккордионов
+  p {
+    @include textType08();
+    & {
+      margin: 0 0 12px 0;
+      line-height: 1.6;
+      color: $text;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  strong {
+    color: $text;
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+    color: $subTextDark;
+  }
+}
+
+// Адаптивность
+@media (max-width: 650px) {
+  .faq-page {
+    padding:5px 12px;
+
+    &__title {
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+  }
+}

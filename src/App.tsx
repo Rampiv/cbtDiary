@@ -6,7 +6,7 @@ import { auth, db } from './firebase/config'
 import { AuthPage } from './pages/AuthPage'
 import { Layout, Loader } from './components'
 import './App.scss'
-import { DiaryPage, FAQPage, ProfilePage } from './pages'
+import { DiaryPage, FAQPage, HelpfulPage, ProfilePage } from './pages'
 import type { DiaryPage as DiaryPageType } from './types/diary'
 
 function App() {
@@ -57,6 +57,7 @@ function App() {
           <Route index element={<DiaryPage />} />
           <Route path="FAQ" element={<FAQPage />} />
           <Route path="profile" element={<ProfilePage pages={pages} />} />
+          <Route path="helpful" element={<HelpfulPage />} />
         </Route>
       </Routes>
     </Router>

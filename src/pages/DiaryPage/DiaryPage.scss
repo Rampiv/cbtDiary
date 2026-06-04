@@ -18,7 +18,15 @@
       @include textType15();
       & {
         color: $text;
-        margin: 0 0 16px 0;
+        margin: 0 0 10px 0;
+      }
+    }
+
+    span {
+      @include textType1();
+      & {
+        display: block;
+        margin: 0 0 10px 0;
       }
     }
   }
@@ -965,8 +973,8 @@
       margin-bottom: 12px;
     }
     &__top-nav-left {
-    flex-direction: column;
-    align-items: flex-start;
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 

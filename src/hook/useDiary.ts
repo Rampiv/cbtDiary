@@ -6,7 +6,7 @@ import { createEmptyDiaryPage, createEmptyThoughtWork } from '../types/diary'
 
 export const useDiary = (pageId: string) => {
   const [page, setPage] = useState<DiaryPage | null>(null)
-  const [savedPage, setSavedPage] = useState<DiaryPage | null>(null)
+  const [, setSavedPage] = useState<DiaryPage | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)

@@ -126,7 +126,7 @@ export const RevealPage = ({
           </thead>
           <tbody>
             {page.thoughts &&
-              page.thoughts.map((thought, thoughtIndex) => (
+              page.thoughts.map((thought) => (
                 <tr key={thought.id}>
                   <td className="reveal-page__table-col">
                     <div className="reveal-page__mobile-header">

@@ -19,6 +19,86 @@ export const FAQPage = () => {
           специалисту — это ускорит понимание ваших паттернов мышления.
         </p>
       </Accordion>
+      <Accordion title="Как добавить ярлык на главный экран телефона">
+        <div className="faq-page__guide">
+          <div className="faq-page__guide-block">
+            <h3 className="faq-page__guide-title">
+              <span className="faq-page__guide-emoji">🍎</span>
+              iPhone / iPad (Safari)
+            </h3>
+            <ol className="faq-page__guide-steps">
+              <li>
+                Откройте этот сайт в браузере <strong>Safari</strong>.
+              </li>
+              <li>
+                Нажмите на кнопку <strong>«Поделиться»</strong> — квадрат со стрелкой вверх{' '}
+                <span className="faq-page__guide-icon">⬆️</span> внизу экрана.
+              </li>
+              <li>
+                Прокрутите меню вниз и выберите <strong>«На экран Домой»</strong>.
+              </li>
+              <li>
+                При желании измените название ярлыка и нажмите <strong>«Добавить»</strong> в правом
+                верхнем углу.
+              </li>
+              <li>
+                Готово — иконка приложения появится на главном экране и будет работать как обычное
+                приложение.
+              </li>
+            </ol>
+            <p className="faq-page__guide-note">
+              ⚠️ Важно: добавить ярлык можно только через Safari. В Chrome или Firefox на iOS этой
+              функции нет.
+            </p>
+          </div>
+
+          <div className="faq-page__guide-block">
+            <h3 className="faq-page__guide-title">
+              <span className="faq-page__guide-emoji">🤖</span>
+              Android (Chrome)
+            </h3>
+            <ol className="faq-page__guide-steps">
+              <li>
+                Откройте этот сайт в браузере <strong>Chrome</strong>.
+              </li>
+              <li>
+                Нажмите на <strong>три точки</strong>{' '}
+                <span className="faq-page__guide-icon">⋮</span> в правом верхнем углу экрана.
+              </li>
+              <li>
+                В выпадающем меню выберите <strong>«Добавить на главный экран»</strong> или{' '}
+                <strong>«Установить приложение»</strong>.
+              </li>
+              <li>
+                Подтвердите название ярлыка и нажмите <strong>«Добавить»</strong>.
+              </li>
+              <li>
+                При желании нажмите <strong>«Добавить автоматически»</strong> — иконка сразу
+                появится на главном экране.
+              </li>
+            </ol>
+            <p className="faq-page__guide-note">
+              💡 В Samsung Internet путь похож: меню → «Добавить страницу на» → «Главный экран».
+            </p>
+          </div>
+
+          <div className="faq-page__guide-block faq-page__guide-block--info">
+            <h3 className="faq-page__guide-title">
+              <span className="faq-page__guide-emoji">✨</span>
+              Зачем это нужно?
+            </h3>
+            <p className="faq-page__guide-text">
+              Ярлык на главном экране работает как обычное приложение: открывается в полноэкранном
+              режиме, без адресной строки браузера. Вы получаете быстрый доступ к дневнику в один
+              тап — и вам не нужно каждый раз вводить адрес или искать сайт в закладках.
+            </p>
+            <p className="faq-page__guide-text">
+              Это особенно удобно, если вы ведёте дневник регулярно: доступ к записям становится
+              таким же простым, как открытие любого другого приложения на телефоне.
+            </p>
+          </div>
+        </div>
+      </Accordion>
 
       <Accordion title="Как работать с дневником" defaultOpen={true}>
         <p>
@@ -115,7 +195,10 @@ export const FAQPage = () => {
           </u>
         </p>
         <p>
-          <strong>Почта:</strong> <u><a href="mailto:inprikazchikov@bk.ru">inprikazchikov@bk.ru</a></u>
+          <strong>Почта:</strong>{' '}
+          <u>
+            <a href="mailto:inprikazchikov@bk.ru">inprikazchikov@bk.ru</a>
+          </u>
         </p>
         <p>
           <u>Сайт сделан не для коммерческого использования.</u>

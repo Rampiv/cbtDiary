@@ -1,45 +1,51 @@
 @use '../../styles/style.scss' as *;
+
 .text-editor {
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid $borderMedium;
+  border-radius: 6px;
   overflow: hidden;
-  background: #fff;
+  background: $white;
 
   .editor-toolbar {
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-    background: #f9f9f9;
+    padding: 5px 6px;
+    border-bottom: 1px solid $borderLight;
+    background: $background;
     display: flex;
-    gap: 8px;
+    gap: 4px;
+    flex-wrap: wrap;
 
     button {
-      padding: 6px 12px;
-      border: 1px solid #ddd;
-      background: #fff;
+      padding: 4px 10px;
+      border: 1px solid $borderMedium;
+      background: $white;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s;
+      font-size: 12px;
+      min-height: 28px;
 
       &:hover {
-        background: #eee;
+        background: $borderLight;
+        border-color: $main;
       }
 
       &.is-active {
-        background: #007bff;
-        color: white;
-        border-color: #007bff;
+        background: $main;
+        color: $white;
+        border-color: $main;
       }
     }
   }
 
   .editor-content {
-    padding: 16px;
-    min-height: 50px;
+    padding: 10px;
+    min-height: 40px;
     outline: none;
 
     /* Стилизация содержимого редактора */
-    ul {
+    ul, ol {
       padding-left: 1.5em;
+      margin: 0;
     }
     strong {
       font-weight: bold;
@@ -58,11 +64,125 @@
         pointer-events: none;
         height: 0;
       }
-      min-height: 50px;
+      min-height: 40px;
       outline: none;
+      font-size: 13px;
+      line-height: 1.5;
 
       > * + * {
-        margin-top: 0.75em;
+        margin-top: 0.5em;
+      }
+    }
+  }
+}
+
+// Адаптивность для планшетов
+@media (max-width: 1024px) {
+  .text-editor {
+    .editor-toolbar {
+      padding: 4px 5px;
+      gap: 3px;
+
+      button {
+        padding: 3px 8px;
+        font-size: 11px;
+        min-height: 26px;
+      }
+    }
+
+    .editor-content {
+      padding: 8px;
+      min-height: 36px;
+
+      .ProseMirror {
+        min-height: 36px;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Адаптивность для мобильных
+@media (max-width: 768px) {
+  .text-editor {
+    border-radius: 6px;
+
+    .editor-toolbar {
+      padding: 4px;
+      gap: 3px;
+
+      button {
+        padding: 4px 8px;
+        font-size: 11px;
+        min-height: 28px;
+      }
+    }
+
+    .editor-content {
+      padding: 8px;
+      min-height: 36px;
+
+      .ProseMirror {
+        min-height: 36px;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Маленькие мобильные
+@media (max-width: 480px) {
+  .text-editor {
+    border-radius: 6px;
+
+    .editor-toolbar {
+      padding: 4px;
+      gap: 3px;
+
+      button {
+        padding: 4px 7px;
+        font-size: 11px;
+        min-height: 26px;
+      }
+    }
+
+    .editor-content {
+      padding: 6px;
+      min-height: 32px;
+
+      .ProseMirror {
+        min-height: 32px;
+        font-size: 12px;
+
+        > * + * {
+          margin-top: 0.4em;
+        }
+      }
+    }
+  }
+}
+
+// Очень маленькие экраны
+@media (max-width: 360px) {
+  .text-editor {
+    .editor-toolbar {
+      padding: 3px;
+      gap: 2px;
+
+      button {
+        padding: 3px 6px;
+        font-size: 10px;
+        min-height: 24px;
+      }
+    }
+
+    .editor-content {
+      padding: 5px;
+      min-height: 30px;
+
+      .ProseMirror {
+        min-height: 30px;
+        font-size: 12px;
       }
     }
   }

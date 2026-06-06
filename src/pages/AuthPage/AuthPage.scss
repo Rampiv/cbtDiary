@@ -14,7 +14,6 @@
   &__card {
     width: 100%;
     max-width: 400px;
-    min-height: 400px;
   }
 
   &__card-inner {
@@ -30,9 +29,6 @@
 
   &__card-front,
   &__card-back {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     background: $white;
     border-radius: 12px;
@@ -44,10 +40,19 @@
 
   // ЛИЦЕВАЯ СТОРОНА
   &__card-front {
-    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  // ОБРАТНАЯ СТОРОНА
+  &__card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: fit-content;
+    transform: rotateY(180deg);
+    overflow-y: auto;
   }
 
   &__front-content {
@@ -119,13 +124,6 @@
     &:active {
       transform: translateY(0);
     }
-  }
-
-  // ОБРАТНАЯ СТОРОНА
-  &__card-back {
-    transform: rotateY(180deg);
-    z-index: 1;
-    overflow-y: auto;
   }
 
   &__back-header {
@@ -435,9 +433,6 @@
 @media (max-width: 768px) {
   .auth {
     &__wrapper {
-      padding: 12px;
-      // Убрали align-items: flex-start и padding-top
-      // Оставляем центрирование, но добавляем отступы сверху/снизу
       padding: 20px 12px;
     }
 

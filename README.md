@@ -1,5 +1,7 @@
 # Дневник мыслей
 
+Деплой: https://cbt-diary-rampiv.vercel.app/
+
 Персональный дневник для записи и отслеживания мыслей с поддержкой форматирования текста, аутентификацией через Firebase и Realtime Database для хранения данных.
 
 ![React](https://img.shields.io/badge/React-18-blue)

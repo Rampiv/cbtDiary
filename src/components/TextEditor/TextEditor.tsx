@@ -7,8 +7,8 @@ import { BulletList } from '@tiptap/extension-bullet-list'
 import { OrderedList } from '@tiptap/extension-ordered-list'
 import { ListItem } from '@tiptap/extension-list-item'
 import { useEffect, useRef } from 'react'
+import DOMPurify from 'dompurify'
 import './TextEditor.scss'
-
 
 // Подавление предупреждений о дублировании расширений
 const originalWarn = console.warn
@@ -44,6 +44,62 @@ const extensions = [
   TextStyle.configure(),
   Color.configure(),
 ]
+
+// Санитизация атрибутов (не текста!)
+const sanitizeAttrs = (attrs: any): any => {
+  if (!attrs) return attrs
+
+  const sanitizedAttrs: any = {}
+  for (const key in attrs) {
+    const value = attrs[key]
+
+    // Пропускаем event-обработчики
+    if (key.toLowerCase().startsWith('on')) continue
+
+    if (typeof value === 'string') {
+      // Запрещаем javascript: протоколы
+      if (value.toLowerCase().trim().startsWith('javascript:')) continue
+
+      // Санитизируем только атрибуты, которые могут содержать HTML/URL
+      if (key === 'href' || key === 'src' || key === 'style') {
+        sanitizedAttrs[key] = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] })
+      } else {
+        sanitizedAttrs[key] = value
+      }
+    } else {
+      sanitizedAttrs[key] = value
+    }
+  }
+  return sanitizedAttrs
+}
+
+// Рекурсивная санитизация JSON-контента Tiptap
+const sanitizeContent = (node: any): any => {
+  if (!node) return node
+
+  // Санитизируем только атрибуты
+  if (node.attrs) {
+    node.attrs = sanitizeAttrs(node.attrs)
+  }
+
+  // Рекурсивно обрабатываем дочерние узлы
+  if (node.content && Array.isArray(node.content)) {
+    node.content = node.content.map(sanitizeContent)
+  }
+
+  return node
+}
+
+// Глубокое клонирование перед санитизацией, чтобы не мутировать оригинал
+const deepClone = (obj: any): any => {
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) return obj.map(deepClone)
+  const cloned: any = {}
+  for (const key in obj) {
+    cloned[key] = deepClone(obj[key])
+  }
+  return cloned
+}
 
 interface TextEditorProps {
   content: any
@@ -91,8 +147,11 @@ export const TextEditor = ({ content, onChange, onBlur, placeholder }: TextEdito
       return
     }
 
-    lastEmittedRef.current = content
-    editor.commands.setContent(content)
+    const sanitizedContent = content ? sanitizeContent(deepClone(content)) : content
+    lastEmittedRef.current = sanitizedContent
+    editor.commands.setContent(sanitizedContent || { type: 'doc', content: [] }, {
+      emitUpdate: false,
+    })
   }, [editor, content])
 
   if (!editor) return null

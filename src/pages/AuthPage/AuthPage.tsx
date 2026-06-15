@@ -235,7 +235,7 @@ export const AuthPage = () => {
               </button>
             </form>
 
-            <div className="auth__divider">
+            {/* <div className="auth__divider">
               <span className="auth__divider-text">или</span>
             </div>
 
@@ -264,7 +264,7 @@ export const AuthPage = () => {
                 />
               </svg>
               Продолжить через Google
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -2,8 +2,6 @@ import { useState, type ChangeEvent, type FormEvent } from 'react'
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
 } from 'firebase/auth'
 import './AuthPage.scss'
 import { auth } from '../../firebase/config'
@@ -57,19 +55,19 @@ export const AuthPage = () => {
     }
   }
 
-  const handleGoogleLogin = async () => {
-    setError(null)
-    setLoading(true)
-    const provider = new GoogleAuthProvider()
+  // const handleGoogleLogin = async () => {
+  //   setError(null)
+  //   setLoading(true)
+  //   const provider = new GoogleAuthProvider()
 
-    try {
-      await signInWithPopup(auth, provider)
-    } catch (err: any) {
-      setError(getErrorMessage(err.code))
-    } finally {
-      setLoading(false)
-    }
-  }
+  //   try {
+  //     await signInWithPopup(auth, provider)
+  //   } catch (err: any) {
+  //     setError(getErrorMessage(err.code))
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped)

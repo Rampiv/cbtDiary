@@ -144,7 +144,8 @@ export const ThoughtWorkPage = ({
       {/* Аккордеон 3: Доказательства */}
       <Accordion title="Анализ: Доказательства">
         <p className="thought-work-page__hint">
-          Не всегда автоматические мысли полностью ошибочны, иногда в них есть хотя бы зерно истины. Собаки действительно кусаются...
+          Не всегда автоматические мысли полностью ошибочны, иногда в них есть хотя бы зерно истины.
+          Собаки действительно кусаются...
         </p>
         <div className="thought-work-page__two-col">
           <div className="thought-work-page__col">
@@ -201,7 +202,9 @@ export const ThoughtWorkPage = ({
       <Accordion title="Анализ: Катастрофизация">
         <div className="thought-work-page__catastrophizing">
           <div className="thought-work-page__field">
-            <label>Если мысль верна, то что самое худшее может произойти?</label>
+            <p className="thought-work-page__hint">
+              Если мысль верна, то что самое худшее может произойти?
+            </p>
             <TextEditor
               editorId={`work-catastrophizing-worst-${thought.id}-auto`}
               content={work.catastrophizing.worst.content}
@@ -237,7 +240,7 @@ export const ThoughtWorkPage = ({
           </div>
 
           <div className="thought-work-page__field">
-            <label>Если мысль верна, то что самое лучшее может произойти?</label>
+            <p className="thought-work-page__hint">Если мысль верна, то что самое лучшее может произойти?</p>
             <TextEditor
               editorId={`work-catastrophizing-best-${thought.id}-auto`}
               content={work.catastrophizing.best.content}
@@ -273,7 +276,7 @@ export const ThoughtWorkPage = ({
           </div>
 
           <div className="thought-work-page__field">
-            <label>Какой вариант развития самый реалистичный?</label>
+            <p className="thought-work-page__hint">Какой вариант развития самый реалистичный?</p>
             <TextEditor
               editorId={`work-catastrophizing-realistic-${thought.id}-auto`}
               content={work.catastrophizing.realistic.content}
@@ -336,7 +339,9 @@ export const ThoughtWorkPage = ({
         <div className="thought-work-page__field">
           <label>Изначальная мысль:</label>
           <div className="thought-work-page__original-thought">
-            {work.specification && <ReadOnlyContent content={work.specification} />|| work.reformulation.originalThought || 'Не заполнено'}
+            {(work.specification && <ReadOnlyContent content={work.specification} />) ||
+              work.reformulation.originalThought ||
+              'Не заполнено'}
           </div>
         </div>
         <div className="thought-work-page__field">
@@ -374,8 +379,8 @@ export const ThoughtWorkPage = ({
       {/* Аккордеон 8: Мысль реальна */}
       <Accordion title="Мысль реальна">
         <p className="thought-work-page__hint">
-          Если мысль соответствует реальности. Что мне делать дальше? Какие шаги мне следует сделать, чтобы что-то поменять? Каковы рамки
-          моей ответственности?
+          Если мысль соответствует реальности. Что мне делать дальше? Какие шаги мне следует
+          сделать, чтобы что-то поменять? Каковы рамки моей ответственности?
         </p>
         <TextEditor
           editorId={`work-action-${thought.id}-auto`}
@@ -442,7 +447,9 @@ export const ThoughtWorkPage = ({
           </tbody>
         </table>
         <p>
-          <strong>Иногда мысль широкая, обхватывает множество областей, попробуйте её конкретизировать</strong>
+          <strong>
+            Иногда мысль широкая, обхватывает множество областей, попробуйте её конкретизировать
+          </strong>
         </p>
       </InfoModal>
     </div>

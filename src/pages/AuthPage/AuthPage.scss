@@ -392,7 +392,83 @@
     width: 18px;
     height: 18px;
   }
+
+    // Ссылка "Забыли пароль?"
+  &__forgot-password {
+    @include textType08();
+    & {
+      display: block;
+      margin-top: 6px;
+      background: none;
+      border: none;
+      color: $main;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+      padding: 0;
+      font-size: 12px;
+      transition: color 0.2s;
+
+      &:hover:not(:disabled) {
+        color: $mainHover;
+      }
+
+      &:disabled {
+        opacity: $disabledOpacity;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  // Сообщение об успешной отправке
+  &__success {
+    @include textType08();
+    & {
+      background: rgba($success, 0.1);
+      border: 1px solid $success;
+      color: $success;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.4;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+
+  // Кнопка отмены восстановления
+  &__cancel-reset {
+    @include textType08();
+    & {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      color: $subText;
+      border: 1px solid $borderMedium;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+
+      &:hover:not(:disabled) {
+        background: $background;
+        color: $text;
+        border-color: $text;
+      }
+
+      &:disabled {
+        opacity: $disabledOpacity;
+        cursor: not-allowed;
+      }
+    }
+  }
 }
+
 
 // ==========================================================================
 // АДАПТИВНОСТЬ

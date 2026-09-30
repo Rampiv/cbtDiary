@@ -1,0 +1,19 @@
+.network-status {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-warning-bg, #fff3cd);
+  color: var(--color-warning-text, #856404);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  z-index: 1000;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+
+  svg {
+    flex-shrink: 0;
+  }
+}

@@ -176,6 +176,17 @@
     background: $background;
     border-radius: 10px;
     padding: 16px;
+    transition: opacity 0.3s ease;
+
+    &--fade-out {
+      opacity: 0;
+    }
+
+    &-inner {
+      min-height: 400px;
+      opacity: 1;
+      transition: opacity 0.3s ease 0.15s;
+    }
   }
 }
 

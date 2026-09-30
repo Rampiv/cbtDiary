@@ -57,8 +57,8 @@ export const AuthPage = () => {
       } else {
         await createUserWithEmailAndPassword(auth, email, password)
       }
-    } catch (err: any) {
-      setError(getErrorMessage(err.code))
+    } catch (err: unknown) {
+      setError(getErrorMessage((err as { code?: string }).code ?? ''))
     } finally {
       setLoading(false)
     }

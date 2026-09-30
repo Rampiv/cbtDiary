@@ -17,8 +17,10 @@ import {
 import { saveAs } from 'file-saver'
 import type { DiaryPage, Thought } from '../types/diary'
 
+import type { EditorContentNode } from '../types/diary'
+
 // Извлекаем текст из Tiptap JSON
-const extractText = (content: any): string => {
+const extractText = (content: EditorContentNode | null | undefined): string => {
   if (!content) return ''
   if (typeof content === 'string') return content
   if (content.text) return content.text
@@ -28,7 +30,7 @@ const extractText = (content: any): string => {
   return ''
 }
 
-const formatContent = (content: any): string => {
+const formatContent = (content: EditorContentNode | null | undefined): string => {
   if (!content) return '(не заполнено)'
   const text = extractText(content).trim()
   return text || '(не заполнено)'

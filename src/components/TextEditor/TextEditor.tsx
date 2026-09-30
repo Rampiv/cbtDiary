@@ -8,37 +8,26 @@ import { OrderedList } from '@tiptap/extension-ordered-list'
 import { ListItem } from '@tiptap/extension-list-item'
 import { useEffect, useRef } from 'react'
 import DOMPurify from 'dompurify'
+import type { EditorContentNode } from '../../types/diary'
 import './TextEditor.scss'
-
-// Подавление предупреждений о дублировании расширений
-const originalWarn = console.warn
-console.warn = function (...args) {
-  if (args[0]?.includes?.('Duplicate extension names found')) {
-    return
-  }
-  originalWarn.apply(console, args)
-}
-
-const CustomBulletList = BulletList.extend({
-  addInputRules() {
-    return []
-  },
-})
-
-const CustomOrderedList = OrderedList.extend({
-  addInputRules() {
-    return []
-  },
-})
 
 const extensions = [
   StarterKit.configure({
     bulletList: false,
     orderedList: false,
     listItem: false,
+    underline: false,
   }),
-  CustomBulletList,
-  CustomOrderedList,
+  BulletList.extend({
+    addInputRules() {
+      return []
+    },
+  }),
+  OrderedList.extend({
+    addInputRules() {
+      return []
+    },
+  }),
   ListItem,
   Underline.configure(),
   TextStyle.configure(),
@@ -46,10 +35,10 @@ const extensions = [
 ]
 
 // Санитизация атрибутов (не текста!)
-const sanitizeAttrs = (attrs: any): any => {
+const sanitizeAttrs = (attrs: Record<string, unknown>): Record<string, unknown> => {
   if (!attrs) return attrs
 
-  const sanitizedAttrs: any = {}
+  const sanitizedAttrs: Record<string, unknown> = {}
   for (const key in attrs) {
     const value = attrs[key]
 
@@ -74,7 +63,7 @@ const sanitizeAttrs = (attrs: any): any => {
 }
 
 // Рекурсивная санитизация JSON-контента Tiptap
-const sanitizeContent = (node: any): any => {
+const sanitizeContent = (node: EditorContentNode): EditorContentNode => {
   if (!node) return node
 
   // Санитизируем только атрибуты
@@ -91,26 +80,26 @@ const sanitizeContent = (node: any): any => {
 }
 
 // Глубокое клонирование перед санитизацией, чтобы не мутировать оригинал
-const deepClone = (obj: any): any => {
+const deepClone = <T,>(obj: T): T => {
   if (obj === null || typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(deepClone)
-  const cloned: any = {}
+  if (Array.isArray(obj)) return obj.map(deepClone) as unknown as T
+  const cloned = {} as Record<string, unknown>
   for (const key in obj) {
-    cloned[key] = deepClone(obj[key])
+    cloned[key] = deepClone((obj as Record<string, unknown>)[key])
   }
-  return cloned
+  return cloned as T
 }
 
 interface TextEditorProps {
-  content: any
-  onChange: (json: any) => void
+  content: EditorContentNode | null
+  onChange: (json: EditorContentNode | null) => void
   onBlur?: () => void
   placeholder?: string
   editorId?: string
 }
 
 export const TextEditor = ({ content, onChange, onBlur, placeholder }: TextEditorProps) => {
-  const lastEmittedRef = useRef<any>(null)
+  const lastEmittedRef = useRef<EditorContentNode | null>(null)
   const isInitialMount = useRef(true)
 
   const editor = useEditor({

@@ -10,6 +10,7 @@ interface RevealPageProps {
   addThought: () => void
   deleteThought: (thoughtId: string) => void
   startWorkOnThought: (thoughtId: string) => void
+  onWorkClick?: (thoughtId: string) => void
 }
 
 export const RevealPage = ({
@@ -19,6 +20,7 @@ export const RevealPage = ({
   addThought,
   deleteThought,
   startWorkOnThought,
+  onWorkClick,
 }: RevealPageProps) => {
   const [showSituationModal, setShowSituationModal] = useState(false)
   const [showHeaderThoughtModal, setShowHeaderThoughtModal] = useState(false)
@@ -300,7 +302,7 @@ export const RevealPage = ({
               <button
                 type="button"
                 className="reveal-page__work-btn"
-                onClick={() => startWorkOnThought(thought.id)}
+                onClick={() => onWorkClick?.(thought.id) || startWorkOnThought(thought.id)}
               >
                 Работать с мыслью {index + 1}
               </button>
@@ -351,97 +353,89 @@ export const RevealPage = ({
         </ul>
       </InfoModal>
 
-      {page.thoughts &&page.thoughts.map((thought) => (
-        <InfoModal
-          key={`thought-${thought.id}`}
-          isOpen={showHeaderThoughtModal}
-          onClose={() => setShowHeaderThoughtModal(false)}
-          title="Автоматическая мысль"
-        >
-          <p>
-            <strong>Примеры:</strong> «Я ничего не понимаю», «Я никогда не пойму», «Я неудачник»,
-            «Он/она меня не ценит», «Всё ужасно», «Слишком тяжело», «У меня никогда не получится»
-          </p>
-          <p>
-            Это спонтанные мысли, которые могут быть оценивающего характера, как правило,
-            категоричные.
-          </p>
-          <p>
-            <strong>Подсказки:</strong>
-          </p>
-          <ul>
-            <li>О чем вы подумали, когда заметили смену настроения?</li>
-            <li>Что вы представили в этой ситуации?</li>
-            <li>Что эта ситуация значит для вас? (или говорит о вас?)</li>
-          </ul>
-        </InfoModal>
-      ))}
+      {/* Модалки — вынесены за цикл .map(), т.к. isOpen общий для всех */}
+      <InfoModal
+        isOpen={showHeaderThoughtModal}
+        onClose={() => setShowHeaderThoughtModal(false)}
+        title="Автоматическая мысль"
+      >
+        <p>
+          <strong>Примеры:</strong> «Я ничего не понимаю», «Я никогда не пойму», «Я неудачник»,
+          «Он/она меня не ценит», «Всё ужасно», «Слишком тяжело», «У меня никогда не получится»
+        </p>
+        <p>
+          Это спонтанные мысли, которые могут быть оценочного характера, как правило,
+          категоричные.
+        </p>
+        <p>
+          <strong>Подсказки:</strong>
+        </p>
+        <ul>
+          <li>О чем вы подумали, когда заметили смену настроения?</li>
+          <li>Что вы представили в этой ситуации?</li>
+          <li>Что эта ситуация значит для вас? (или говорит о вас?)</li>
+        </ul>
+      </InfoModal>
 
-      {page.thoughts &&page.thoughts.map((thought) => (
-        <InfoModal
-          key={`emotion-${thought.id}`}
-          isOpen={showHeaderEmotionModal}
-          onClose={() => setShowHeaderEmotionModal(false)}
-          title="Эмоциональная реакция"
-        >
-          <p>Эмоции нужно отличать от мыслей</p>
-          <p>
-            Вы предполагаете, что это чувствуете/чувствовали? Или же вы действительно испытываете?
-          </p>
-          <p>
-            <strong>Подсказка:</strong>
-          </p>
-          <ul>
-            <li>Грусть, подавленность, одиночество, несчастье</li>
-            <li>Тревога, волнение, страх, напряжение</li>
-            <li>Злость, ярость, раздражение</li>
-            <li>Стыд, смущение, унижение</li>
-            <li>Разочарование</li>
-            <li>Ревность, зависть</li>
-            <li>Вина</li>
-            <li>Боль</li>
-            <li>Подозрительность</li>
-          </ul>
-        </InfoModal>
-      ))}
+      <InfoModal
+        isOpen={showHeaderEmotionModal}
+        onClose={() => setShowHeaderEmotionModal(false)}
+        title="Эмоциональная реакция"
+      >
+        <p>Эмоции нужно отличать от мыслей</p>
+        <p>
+          Вы предполагаете, что это чувствуете/чувствовали? Или же вы действительно испытываете?
+        </p>
+        <p>
+          <strong>Подсказка:</strong>
+        </p>
+        <ul>
+          <li>Грусть, подавленность, одиночество, несчастье</li>
+          <li>Тревога, волнение, страх, напряжение</li>
+          <li>Злость, ярость, раздражение</li>
+          <li>Стыд, смущение, унижение</li>
+          <li>Разочарование</li>
+          <li>Ревность, зависть</li>
+          <li>Вина</li>
+          <li>Боль</li>
+          <li>Подозрительность</li>
+        </ul>
+      </InfoModal>
 
-      {page.thoughts &&page.thoughts.map((thought) => (
-        <InfoModal
-          key={`behavior-${thought.id}`}
-          isOpen={showHeaderBehaviorModal}
-          onClose={() => setShowHeaderBehaviorModal(false)}
-          title="Поведенческая реакция"
-        >
-          <p>Ваша поведенческая реакиция на событие</p>
-          <p>
-            <strong>Подсказка:</strong>
-          </p>
-          <ul>
-            <li>Бей</li>
-            <li>Беги</li>
-            <li>Замри</li>
-          </ul>
-          <p>Копинг-стратегии</p>
-          <ul>
-            <li>Избегать негативных эмоций</li>
-           <li> Показывать яркие эмоции (например, привлекать внимание)</li>
-           <li>Пытаться быть совершенным</li>
-           <li>специально казаться некомпетентным и беззащитным</li>
-           <li>Быть слишком ответственным</li>
-           <li>Избегать ответственности</li>
-           <li>Искать признание</li>
-           <li>Избегать внимания</li>
-           <li>Избегать конфронтации</li>
-           <li>Провоцировать других</li>
-           <li>Пытаться контролировать ситуация</li>
-           <li>Передавать контроль другим</li>
-           <li>Вести себя инфантильно</li>
-           <li>Вести себя авторитарно</li>
-           <li>Пытаться угодить другим</li>
-           <li>Отдаляться от других или пытаться удовлетворить только себя</li>
-          </ul>
-        </InfoModal>
-      ))}
+      <InfoModal
+        isOpen={showHeaderBehaviorModal}
+        onClose={() => setShowHeaderBehaviorModal(false)}
+        title="Поведенческая реакция"
+      >
+        <p>Ваша поведенческая реакция на событие</p>
+        <p>
+          <strong>Подсказка:</strong>
+        </p>
+        <ul>
+          <li>Бей</li>
+          <li>Беги</li>
+          <li>Замри</li>
+        </ul>
+        <p>Копинг-стратегии</p>
+        <ul>
+          <li>Избегать негативных эмоций</li>
+          <li>Показывать яркие эмоции (например, привлекать внимание)</li>
+          <li>Пытаться быть совершенным</li>
+          <li>Специально казаться некомпетентным и беззащитным</li>
+          <li>Быть слишком ответственным</li>
+          <li>Избегать ответственности</li>
+          <li>Искать признание</li>
+          <li>Избегать внимания</li>
+          <li>Избегать конфронтации</li>
+          <li>Провоцировать других</li>
+          <li>Пытаться контролировать ситуацию</li>
+          <li>Передавать контроль другим</li>
+          <li>Вести себя инфантильно</li>
+          <li>Вести себя авторитарно</li>
+          <li>Пытаться угодить другим</li>
+          <li>Отдаляться от других или пытаться удовлетворить только себя</li>
+        </ul>
+      </InfoModal>
     </div>
   )
 }

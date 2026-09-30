@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Toast.scss'
 
 interface ToastProps {
@@ -9,12 +9,11 @@ interface ToastProps {
 }
 
 export const Toast = ({ message, type = 'success', duration = 500, onClose }: ToastProps) => {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    setIsVisible(true)
-
-    const hideTimer = setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setIsVisible(false)
       setTimeout(() => {
         onClose()
@@ -22,7 +21,9 @@ export const Toast = ({ message, type = 'success', duration = 500, onClose }: To
     }, duration)
 
     return () => {
-      clearTimeout(hideTimer)
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
     }
   }, [duration, onClose])
 

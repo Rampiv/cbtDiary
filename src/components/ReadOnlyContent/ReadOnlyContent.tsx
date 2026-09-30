@@ -6,13 +6,14 @@ import { TextStyle } from '@tiptap/extension-text-style'
 import './ReadOnlyContent.scss'
 import { useEffect } from 'react'
 import DOMPurify from 'dompurify'
+import type { EditorContentNode } from '../../types/diary'
 
 interface ReadOnlyContentProps {
-  content: any
+  content: EditorContentNode | null | undefined
 }
 
 // Рекурсивная санитизация JSON-контента
-const sanitizeContent = (node: any): any => {
+const sanitizeContent = (node: EditorContentNode): EditorContentNode => {
   if (!node) return node
 
   if (node.text) {
@@ -20,7 +21,7 @@ const sanitizeContent = (node: any): any => {
   }
 
   if (node.attrs) {
-    const sanitizedAttrs: any = {}
+    const sanitizedAttrs: Record<string, unknown> = {}
     for (const key in node.attrs) {
       const value = node.attrs[key]
       if (typeof value === 'string') {
@@ -41,14 +42,14 @@ const sanitizeContent = (node: any): any => {
   return node
 }
 
-const deepClone = (obj: any): any => {
+const deepClone = <T,>(obj: T): T => {
   if (obj === null || typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(deepClone)
-  const cloned: any = {}
+  if (Array.isArray(obj)) return obj.map(deepClone) as unknown as T
+  const cloned = {} as Record<string, unknown>
   for (const key in obj) {
-    cloned[key] = deepClone(obj[key])
+    cloned[key] = deepClone((obj as Record<string, unknown>)[key])
   }
-  return cloned
+  return cloned as T
 }
 
 export const ReadOnlyContent = ({ content }: ReadOnlyContentProps) => {
@@ -69,7 +70,7 @@ export const ReadOnlyContent = ({ content }: ReadOnlyContentProps) => {
     if (!editor) return
 
     // Санитизация входящего контента
-    const sanitizedContent = content ? sanitizeContent(deepClone(content)) : content
+    const sanitizedContent = content ? sanitizeContent(deepClone(content)) : { type: 'doc', content: [] }
     editor.commands.setContent(sanitizedContent)
   }, [editor, content])
 

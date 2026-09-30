@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import { Header } from '../Header/Header'
+import { Header, NetworkStatus } from '..'
 import './Layout.scss'
 
 export const Layout = () => {
@@ -9,6 +9,7 @@ export const Layout = () => {
       <main className="layout__content">
         <Outlet />
       </main>
+      <NetworkStatus />
     </div>
   )
 }

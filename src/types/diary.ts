@@ -1,52 +1,61 @@
-export interface EditorContent {
+export interface EditorContentNode {
   type: string
-  content?: any[]
+  content?: EditorContentNode[]
   text?: string
-  [key: string]: any
+  attrs?: Record<string, unknown>
+  [key: string]: unknown
 }
+
+export type EditorContent = EditorContentNode | null
 
 export interface Thought {
   id: string
-  automaticThought: EditorContent | null
+  automaticThought: EditorContent
   emotion: { name: string; intensity: number }[]
-  behavioralReaction: EditorContent | null
+  behavioralReaction: EditorContent
 }
 
 export interface ThoughtWork {
   thoughtId: string
-  specification: EditorContent | null
+  specification: EditorContent
   beliefScore: number
   usefulness: {
-    helps: EditorContent | null
-    complicates: EditorContent | null
+    helps: EditorContent
+    complicates: EditorContent
   }
   evidence: {
-    for: EditorContent | null
-    against: EditorContent | null
+    for: EditorContent
+    against: EditorContent
   }
-  alternative: EditorContent | null
+  alternative: EditorContent
   catastrophizing: {
-    worst: { content: EditorContent | null; belief: number }
-    best: { content: EditorContent | null; belief: number }
-    realistic: { content: EditorContent | null; belief: number }
+    worst: { content: EditorContent; belief: number }
+    best: { content: EditorContent; belief: number }
+    realistic: { content: EditorContent; belief: number }
   }
-  distancing: EditorContent | null
+  distancing: EditorContent
   reformulation: {
     originalThought: string
-    response: EditorContent | null
+    response: EditorContent
     belief: number
   }
-  actionPlan: EditorContent | null
+  actionPlan: EditorContent
 }
 
 export interface DiaryPage {
   id: string
   createdAt: number
   updatedAt: number
-  resource: EditorContent | null
-  situation: EditorContent | null
+  resource: EditorContent
+  situation: EditorContent
   thoughts: Thought[]
   thoughtWorks: ThoughtWork[]
+  _encrypted?: {
+    encrypted: string
+    salt: string
+    iv: string
+    version: number
+  }
 }
 
 export const createEmptyThought = (index: number): Thought => ({

@@ -26,6 +26,7 @@ function App() {
   // Загрузка списка страниц для ProfilePage
   useEffect(() => {
     if (!user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- синхронизация state при смене пользователя
       setPages([])
       return
     }

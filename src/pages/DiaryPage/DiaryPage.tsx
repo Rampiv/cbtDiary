@@ -16,7 +16,10 @@ export const DiaryPage = () => {
   const [view, setView] = useState<'reveal' | 'thought'>('reveal')
   const [showToast, setShowToast] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [contentKey, setContentKey] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
   const prevIsSavingRef = useRef<boolean>(false)
+  const pageCounterRef = useRef(0)
 
   // Загрузка списка страниц
   useEffect(() => {
@@ -76,15 +79,14 @@ export const DiaryPage = () => {
     const userId = auth.currentUser?.uid
     if (!userId) return
 
-    const newId = `page-${Date.now()}`
+    pageCounterRef.current += 1
+    const newId = `page-${pageCounterRef.current}`
     const newPage = createEmptyDiaryPage(newId)
 
     try {
       const pageRef = ref(db, `users/${userId}/diary/${newId}`)
       await set(pageRef, newPage)
-      setCurrentPageId(newId)
-      setView('reveal')
-      setActiveThoughtId(null)
+      handleSelectPage(newId)
     } catch (error) {
       console.error('Ошибка создания страницы:', error)
     }
@@ -101,15 +103,31 @@ export const DiaryPage = () => {
   }
 
   const handleSelectPage = (pageId: string) => {
-    setCurrentPageId(pageId)
-    setView('reveal')
-    setActiveThoughtId(null)
+    // Запускаем transition
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentPageId(pageId)
+      setView('reveal')
+      setActiveThoughtId(null)
+      setContentKey((prev) => prev + 1)
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 300)
+    }, 150)
   }
 
   const handleStartWork = (thoughtId: string) => {
-    startWorkOnThought(thoughtId)
-    setActiveThoughtId(thoughtId)
-    setView('thought')
+    setIsTransitioning(true)
+    setTimeout(() => {
+      startWorkOnThought(thoughtId)
+      setActiveThoughtId(thoughtId)
+      setView('thought')
+      setContentKey((prev) => prev + 1)
+      setTimeout(() => {
+        setIsTransitioning(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 300)
+    }, 150)
   }
 
   const handleNextThought = () => {
@@ -117,9 +135,43 @@ export const DiaryPage = () => {
     const currentIndex = page.thoughts.findIndex((t) => t.id === activeThoughtId)
     if (currentIndex < page.thoughts.length - 1) {
       const nextThought = page.thoughts[currentIndex + 1]
-      setActiveThoughtId(nextThought.id)
-      startWorkOnThought(nextThought.id)
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setActiveThoughtId(nextThought.id)
+        startWorkOnThought(nextThought.id)
+        setContentKey((prev) => prev + 1)
+        setTimeout(() => {
+          setIsTransitioning(false)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 300)
+      }, 150)
     }
+  }
+
+  const handleThoughtNav = (thoughtId: string) => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setActiveThoughtId(thoughtId)
+      setView('thought')
+      startWorkOnThought(thoughtId)
+      setContentKey((prev) => prev + 1)
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 300)
+    }, 150)
+  }
+
+  const handleRevealNav = () => {
+    if (view === 'reveal') return
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setView('reveal')
+      setActiveThoughtId(null)
+      setContentKey((prev) => prev + 1)
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 300)
+    }, 150)
   }
 
   if (!currentPageId || !page) {
@@ -207,14 +259,11 @@ export const DiaryPage = () => {
           className={`diary-page__thought-btn ${
             view === 'reveal' ? 'diary-page__thought-btn--active' : ''
           }`}
-          onClick={() => {
-            setView('reveal')
-            setActiveThoughtId(null)
-          }}
+          onClick={handleRevealNav}
         >
           Выявление
         </button>
-        {page.thoughts &&
+        {page?.thoughts &&
           page.thoughts.map((thought, index) => (
             <button
               key={thought.id}
@@ -222,39 +271,35 @@ export const DiaryPage = () => {
               className={`diary-page__thought-btn ${
                 activeThoughtId === thought.id ? 'diary-page__thought-btn--active' : ''
               }`}
-              onClick={() => {
-                setActiveThoughtId(thought.id)
-                setView('thought')
-                startWorkOnThought(thought.id)
-              }}
+              onClick={() => handleThoughtNav(thought.id)}
             >
               Работа: мысль {index + 1}
             </button>
           ))}
       </div>
 
-      <div className="diary-page__content">
-        {view === 'reveal' && (
-          <RevealPage
-            key={currentPageId}
-            page={page}
-            updatePage={updatePage}
-            autoSave={autoSave}
-            addThought={addThought}
-            deleteThought={deleteThought}
-            startWorkOnThought={handleStartWork}
-          />
-        )}
-        {view === 'thought' && activeThoughtId && (
-          <ThoughtWorkPage
-            key={activeThoughtId}
-            page={page}
-            thoughtId={activeThoughtId}
-            updateThoughtWork={updateThoughtWork}
-            autoSave={autoSave}
-            onNextThought={handleNextThought}
-          />
-        )}
+      <div className={`diary-page__content ${isTransitioning ? 'diary-page__content--fade-out' : ''}`}>
+        <div key={contentKey} className="diary-page__content-inner">
+          {view === 'reveal' && (
+            <RevealPage
+              page={page!}
+              updatePage={updatePage}
+              autoSave={autoSave}
+              addThought={addThought}
+              deleteThought={deleteThought}
+              startWorkOnThought={handleStartWork}
+            />
+          )}
+          {view === 'thought' && activeThoughtId && (
+            <ThoughtWorkPage
+              page={page!}
+              thoughtId={activeThoughtId}
+              updateThoughtWork={updateThoughtWork}
+              autoSave={autoSave}
+              onNextThought={handleNextThought}
+            />
+          )}
+        </div>
       </div>
     </div>
   )

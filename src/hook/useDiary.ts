@@ -15,6 +15,7 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
   const [page, setPage] = useState<DiaryPage | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
+  const [isPageLoading, setIsPageLoading] = useState(false)
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pageRef = useRef<DiaryPage | null>(null)
   const justSavedRef = useRef(false)
@@ -89,6 +90,8 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
       saveTimeoutRef.current = null
     }
 
+    // Устанавливаем состояние загрузки
+    setIsPageLoading(true)
     setPage(null)
     setHasChanges(false)
     setIsSaving(false)
@@ -127,11 +130,13 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
         prevDecryptedRef.current = currentStr
         setPage(processedData)
         setHasChanges(false)
+        setIsPageLoading(false)
       } else {
         const newPage = createEmptyDiaryPage(pageId)
         prevDecryptedRef.current = JSON.stringify(newPage)
         setPage(newPage)
         setHasChanges(false)
+        setIsPageLoading(false)
       }
     })
 
@@ -316,6 +321,7 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
     page,
     hasChanges,
     isSaving,
+    isPageLoading,
     updatePage,
     autoSave,
     manualSave,

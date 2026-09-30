@@ -29,6 +29,22 @@
         margin: 0 0 10px 0;
       }
     }
+
+    /* Анимация загрузки */
+    h2 {
+      animation: diary-fade-in 0.3s ease;
+    }
+  }
+
+  @keyframes diary-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   &__loader {
     @include textType1();

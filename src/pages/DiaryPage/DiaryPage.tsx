@@ -18,8 +18,31 @@ export const DiaryPage = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [contentKey, setContentKey] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [encryptionEnabled, setEncryptionEnabled] = useState(false)
+  const [encryptionPassword, setEncryptionPassword] = useState('')
   const prevIsSavingRef = useRef<boolean>(false)
   const pageCounterRef = useRef(0)
+
+  // Загрузка состояния шифрования
+  useEffect(() => {
+    const saved = localStorage.getItem('encryptionEnabled')
+    if (saved === 'true') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setEncryptionEnabled(true)
+      const password = localStorage.getItem('encryptionPassword') || ''
+      setEncryptionPassword(password)
+    }
+  }, [])
+
+  // Сохранение состояния шифрования
+  useEffect(() => {
+    localStorage.setItem('encryptionEnabled', String(encryptionEnabled))
+    if (encryptionEnabled && encryptionPassword) {
+      localStorage.setItem('encryptionPassword', encryptionPassword)
+    } else {
+      localStorage.removeItem('encryptionPassword')
+    }
+  }, [encryptionEnabled, encryptionPassword])
 
   // Загрузка списка страниц
   useEffect(() => {
@@ -55,6 +78,7 @@ export const DiaryPage = () => {
     page,
     hasChanges,
     isSaving,
+    isPageLoading,
     updatePage,
     autoSave,
     manualSave,
@@ -63,7 +87,10 @@ export const DiaryPage = () => {
     deletePage,
     startWorkOnThought,
     updateThoughtWork,
-  } = useDiary(currentPageId || '')
+  } = useDiary(currentPageId || '', {
+    encryptionEnabled,
+    encryptionPassword,
+  })
 
   // Показ уведомления о сохранении
   useEffect(() => {
@@ -174,19 +201,31 @@ export const DiaryPage = () => {
     }, 150)
   }
 
-  if (!currentPageId || !page) {
+  if (!currentPageId || isPageLoading || !page) {
     return (
       <div className="diary-page">
         {showToast && <ToastPortal message="Сохранено" onClose={() => setShowToast(false)} />}
         <div className="diary-page__empty">
-          <h2>У вас пока нет записей</h2>
-          <span>
-            Пожалуйста, ознакомьтесь с инструкцией по работе с дневником в разделе{' '}
-            <strong>FAQ</strong>.
-          </span>
-          <button type="button" className="diary-page__create-btn" onClick={handleCreatePage}>
-            Создать первую страницу
-          </button>
+          {isPageLoading ? (
+            <>
+              <h2>Загрузка записи...</h2>
+            </>
+          ) : (
+            <>
+              <h2>У вас пока нет записей</h2>
+              <span>
+                Пожалуйста, ознакомьтесь с инструкцией по работе с дневником в разделе{' '}
+                <strong>FAQ</strong>.
+              </span>
+              <button
+                type="button"
+                className="diary-page__create-btn"
+                onClick={handleCreatePage}
+              >
+                Создать первую страницу
+              </button>
+            </>
+          )}
         </div>
       </div>
     )

@@ -41,9 +41,15 @@
     padding: 10px;
     min-height: 40px;
     outline: none;
+    [data-theme='dark'] & {
+      background: var(--color-bg-secondary-input);
+      border-color: var(--color-border-medium);
+      color: var(--color-text-primary);
+    }
 
     /* Стилизация содержимого редактора */
-    ul, ol {
+    ul,
+    ol {
       padding-left: 1.5em;
       margin: 0;
     }

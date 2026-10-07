@@ -1,0 +1,135 @@
+@use '../../styles/style.scss' as *;
+
+.privacy-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px;
+
+  &__title {
+    @include textType15();
+    & {
+      color: $text;
+      margin: 0 0 8px 0;
+      font-weight: 700;
+    }
+  }
+
+  &__last-updated {
+    @include textType08();
+    & {
+      color: $subText;
+      margin: 0 0 32px 0;
+      font-style: italic;
+    }
+  }
+
+  &__section {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid $borderLight;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__section-title {
+    @include textType1();
+    & {
+      color: $text;
+      margin: 0 0 16px 0;
+      font-weight: 600;
+    }
+  }
+
+  &__text {
+    @include textType08();
+    & {
+      color: $text;
+      margin: 0 0 12px 0;
+      line-height: 1.6;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__data-list,
+  &__rights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__data-item,
+  &__right-item {
+    padding: 16px;
+    background: $background;
+    border-radius: 8px;
+    border-left: 3px solid $main;
+
+    strong {
+      @include textType1();
+      & {
+        display: block;
+        margin-bottom: 8px;
+        color: $text;
+      }
+    }
+
+    p {
+      @include textType08();
+      & {
+        color: $text;
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  &__list {
+    @include textType08();
+    & {
+      color: $text;
+      margin: 12px 0;
+      padding-left: 24px;
+      line-height: 1.8;
+
+      li {
+        margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 650px) {
+  .privacy-page {
+    padding: 20px 12px;
+
+    &__section {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+    }
+
+    &__data-item,
+    &__right-item {
+      padding: 14px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-page {
+    padding: 16px 10px;
+
+    &__title {
+      font-size: 22px;
+    }
+  }
+}

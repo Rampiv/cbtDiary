@@ -75,4 +75,35 @@
   &__body {
     padding: 0 20px 20px 20px;
   }
+
+  // Тёмная тема
+  [data-theme='dark'] & {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border-medium);
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    &__header:hover {
+      background: var(--color-fill);
+    }
+
+    &__title {
+      color: var(--color-text-primary);
+    }
+
+    &__description {
+      color: var(--color-text-secondary);
+    }
+
+    &__icon {
+      color: var(--color-text-tertiary);
+    }
+
+    &__body {
+      color: var(--color-text-primary);
+    }
+  }
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Slider } from 'antd'
 import type { DiaryPage, ThoughtWork } from '../../../../types/diary'
 import { Accordion, InfoModal, ReadOnlyContent, TextEditor } from '../../../../components'
+import { COGNITIVE_DISTORTIONS } from '../../../../utils/cognitiveDistortions'
 
 interface ThoughtWorkPageProps {
   page: DiaryPage
@@ -26,8 +27,8 @@ export const ThoughtWorkPage = ({
 
   return (
     <div className="thought-work-page">
-      {/* Аккордеон 1: Работа */}
-      <Accordion title="Работа" defaultOpen={true}>
+      <div className="reveal-page__title-section">
+        <h2 className="reveal-page__title">Работа</h2>
         <div className="thought-work-page__summary-table">
           <div className="thought-work-page__summary-row">
             <div className="thought-work-page__summary-col">
@@ -68,9 +69,11 @@ export const ThoughtWorkPage = ({
             </div>
           </div>
         </div>
-
+      </div>
+      {/* Аккордеон 1: Конкретизация мыслей */}
+      <Accordion title="Анализ: Конкретизация мысли" defaultOpen={false}>
         <div className="thought-work-page__field">
-          <div className="thought-work-page__field-header">
+          <div className="thought-work-page__hint">
             <label>Конкретизация мысли*</label>
             <button
               type="button"
@@ -240,7 +243,9 @@ export const ThoughtWorkPage = ({
           </div>
 
           <div className="thought-work-page__field">
-            <p className="thought-work-page__hint">Если мысль верна, то что самое лучшее может произойти?</p>
+            <p className="thought-work-page__hint">
+              Если мысль верна, то что самое лучшее может произойти?
+            </p>
             <TextEditor
               editorId={`work-catastrophizing-best-${thought.id}-auto`}
               content={work.catastrophizing.best.content}
@@ -328,6 +333,74 @@ export const ThoughtWorkPage = ({
           onBlur={autoSave}
           placeholder="Что бы вы сказали близкому человеку?"
         />
+      </Accordion>
+
+      {/* Аккордеон 8: Когнитивные искажения */}
+      <Accordion title="Анализ: Когнитивные искажения" defaultOpen={false}>
+        <div className="thought-work-page__field">
+          <div className="thought-work-page__hint">
+            <a
+              href="/helpful/cognitive-distortions"
+              className="thought-work-page__distortions-link"
+              rel="noopener noreferrer"
+            >
+              Подробнее о когнитивных искажениях
+            </a>
+          </div>
+
+          {/* Мультиселект для когнитивных искажений */}
+          <div className="thought-work-page__distortions-grid">
+            {COGNITIVE_DISTORTIONS.map((distortion) => {
+              const isSelected = work.cognitiveDistortions?.includes(distortion.id)
+              return (
+                <label
+                  key={distortion.id}
+                  className={`thought-work-page__distortion-item ${
+                    isSelected ? 'thought-work-page__distortion-item--active' : ''
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        updateThoughtWork(thoughtId, (w) => ({
+                          ...w,
+                          cognitiveDistortions: [...(w.cognitiveDistortions || []), distortion.id],
+                        }))
+                      } else {
+                        updateThoughtWork(thoughtId, (w) => ({
+                          ...w,
+                          cognitiveDistortions: (w.cognitiveDistortions || []).filter(
+                            (id) => id !== distortion.id
+                          ),
+                        }))
+                      }
+                      autoSave()
+                    }}
+                  />
+                  <span className="thought-work-page__distortion-name">{distortion.name}</span>
+                </label>
+              )
+            })}
+          </div>
+
+          {/* TextEditor для объяснения выбора */}
+          <div className="thought-work-page__field">
+            <label className="thought-work-page__hint">
+              Опишите подробнее, почему вы выбрали именно это(эти) искажения
+            </label>
+            <TextEditor
+              editorId={`work-distortions-explanation-${thought.id}-auto`}
+              content={work.distortionsExplanation}
+              onChange={(content) =>
+                updateThoughtWork(thoughtId, (w) => ({ ...w, distortionsExplanation: content }))
+              }
+              onBlur={autoSave}
+              placeholder="Почему вы считаете, что эти когнитивные искажения присутствуют в вашей мысли?"
+            />
+          </div>
+        </div>
       </Accordion>
 
       {/* Аккордеон 7: Переформулирование */}

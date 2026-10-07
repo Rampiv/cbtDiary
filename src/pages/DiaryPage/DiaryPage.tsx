@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import { onValue, ref, set } from 'firebase/database'
+import { ref, set } from 'firebase/database'
 import { db, auth } from '../../firebase/config'
 import { SaveButton } from '../../components/SaveButton/SaveButton'
-import type { DiaryPage as DiaryPageType } from '../../types/diary'
+import { CustomSelect } from '../../components/CustomSelect'
 import { createEmptyDiaryPage } from '../../types/diary'
 import './DiaryPage.scss'
 import { useDiary } from '../../hook/useDiary'
 import { RevealPage, ThoughtWorkPage } from './subPages'
 import { ToastPortal } from '../../components'
+import { usePages } from '../../contexts/PagesContext'
 
 export const DiaryPage = () => {
-  const [pages, setPages] = useState<DiaryPageType[]>([])
+  const { pages } = usePages()
   const [currentPageId, setCurrentPageId] = useState<string | null>(null)
   const [activeThoughtId, setActiveThoughtId] = useState<string | null>(null)
   const [view, setView] = useState<'reveal' | 'thought'>('reveal')
@@ -18,61 +19,53 @@ export const DiaryPage = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [contentKey, setContentKey] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
-  const [encryptionEnabled, setEncryptionEnabled] = useState(false)
-  const [encryptionPassword, setEncryptionPassword] = useState('')
   const prevIsSavingRef = useRef<boolean>(false)
   const pageCounterRef = useRef(0)
+  const createdPageRef = useRef(false)
 
-  // Загрузка состояния шифрования
-  useEffect(() => {
-    const saved = localStorage.getItem('encryptionEnabled')
-    if (saved === 'true') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setEncryptionEnabled(true)
-      const password = localStorage.getItem('encryptionPassword') || ''
-      setEncryptionPassword(password)
-    }
-  }, [])
-
-  // Сохранение состояния шифрования
-  useEffect(() => {
-    localStorage.setItem('encryptionEnabled', String(encryptionEnabled))
-    if (encryptionEnabled && encryptionPassword) {
-      localStorage.setItem('encryptionPassword', encryptionPassword)
-    } else {
-      localStorage.removeItem('encryptionPassword')
-    }
-  }, [encryptionEnabled, encryptionPassword])
-
-  // Загрузка списка страниц
-  useEffect(() => {
+  // Создание новой страницы
+  const handleCreatePage = async () => {
     const userId = auth.currentUser?.uid
     if (!userId) return
 
-    const pagesRef = ref(db, `users/${userId}/diary`)
-    const unsubscribe = onValue(pagesRef, (snapshot) => {
-      const data = snapshot.val()
-      if (data) {
-        const pagesList = Object.values(data) as DiaryPageType[]
-        setPages(pagesList.sort((a, b) => a.createdAt - b.createdAt))
-        setCurrentPageId((currentId) => {
-          if (!currentId && pagesList.length > 0) {
-            return pagesList[0].id
-          }
-          // Если текущая страница удалена, переключаемся на первую
-          if (currentId && !pagesList.find((p) => p.id === currentId)) {
-            return pagesList.length > 0 ? pagesList[0].id : null
-          }
-          return currentId
-        })
-      } else {
-        setPages([])
-        setCurrentPageId(null)
-      }
-    })
+    pageCounterRef.current += 1
+    const newId = `page-${pageCounterRef.current}`
+    const newPage = createEmptyDiaryPage(newId)
 
-    return () => unsubscribe()
-  }, [])
+    try {
+      const pageRef = ref(db, `users/${userId}/diary/${newId}`)
+      await set(pageRef, newPage)
+      // Ждём загрузки новой страницы из Firebase
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      // Сразу переключаемся на новую страницу
+      setCurrentPageId(newId)
+      setView('reveal')
+      setActiveThoughtId(null)
+      setContentKey((prev) => prev + 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (error) {
+      console.error('Ошибка создания страницы:', error)
+    }
+  }
+
+  // Сортируем страницы по убыванию (свежие сверху) для DiaryPage
+  const sortedPages = [...pages].sort((a, b) => b.createdAt - a.createdAt)
+
+  // Автовыбор первой страницы при загрузке записей
+  useEffect(() => {
+    if (pages.length > 0 && !currentPageId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- автовыбор страницы при загрузке
+      setCurrentPageId(sortedPages[0].id)
+    }
+  }, [pages.length])
+
+  // Автоматическое создание страницы, если её нет
+  useEffect(() => {
+    if (pages.length === 0 && auth.currentUser && !createdPageRef.current) {
+      createdPageRef.current = true
+      handleCreatePage()
+    }
+  }, [pages.length])
 
   const {
     page,
@@ -87,10 +80,7 @@ export const DiaryPage = () => {
     deletePage,
     startWorkOnThought,
     updateThoughtWork,
-  } = useDiary(currentPageId || '', {
-    encryptionEnabled,
-    encryptionPassword,
-  })
+  } = useDiary(currentPageId || '')
 
   // Показ уведомления о сохранении
   useEffect(() => {
@@ -102,23 +92,6 @@ export const DiaryPage = () => {
     }
   }, [isSaving, hasChanges])
 
-  const handleCreatePage = async () => {
-    const userId = auth.currentUser?.uid
-    if (!userId) return
-
-    pageCounterRef.current += 1
-    const newId = `page-${pageCounterRef.current}`
-    const newPage = createEmptyDiaryPage(newId)
-
-    try {
-      const pageRef = ref(db, `users/${userId}/diary/${newId}`)
-      await set(pageRef, newPage)
-      handleSelectPage(newId)
-    } catch (error) {
-      console.error('Ошибка создания страницы:', error)
-    }
-  }
-
   const handleDeletePage = async () => {
     if (!currentPageId) return
 
@@ -126,11 +99,27 @@ export const DiaryPage = () => {
     if (success) {
       setShowDeleteConfirm(false)
       setShowToast(true)
+      // Переключаемся на последнюю созданную страницу
+      if (sortedPages.length > 1) {
+        const remainingPages = sortedPages.filter((p) => p.id !== currentPageId)
+        if (remainingPages.length > 0) {
+          setIsTransitioning(true)
+          setTimeout(() => {
+            setCurrentPageId(remainingPages[0].id)
+            setView('reveal')
+            setActiveThoughtId(null)
+            setContentKey((prev) => prev + 1)
+            setTimeout(() => {
+              setIsTransitioning(false)
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }, 300)
+          }, 150)
+        }
+      }
     }
   }
 
   const handleSelectPage = (pageId: string) => {
-    // Запускаем transition
     setIsTransitioning(true)
     setTimeout(() => {
       setCurrentPageId(pageId)
@@ -139,6 +128,7 @@ export const DiaryPage = () => {
       setContentKey((prev) => prev + 1)
       setTimeout(() => {
         setIsTransitioning(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }, 300)
     }, 150)
   }
@@ -201,31 +191,12 @@ export const DiaryPage = () => {
     }, 150)
   }
 
-  if (!currentPageId || isPageLoading || !page) {
+  // Если нет страницы — показываем loader
+  if (!currentPageId || !page || isPageLoading) {
     return (
       <div className="diary-page">
-        {showToast && <ToastPortal message="Сохранено" onClose={() => setShowToast(false)} />}
         <div className="diary-page__empty">
-          {isPageLoading ? (
-            <>
-              <h2>Загрузка записи...</h2>
-            </>
-          ) : (
-            <>
-              <h2>У вас пока нет записей</h2>
-              <span>
-                Пожалуйста, ознакомьтесь с инструкцией по работе с дневником в разделе{' '}
-                <strong>FAQ</strong>.
-              </span>
-              <button
-                type="button"
-                className="diary-page__create-btn"
-                onClick={handleCreatePage}
-              >
-                Создать первую страницу
-              </button>
-            </>
-          )}
+          <h2>Загрузка записи...</h2>
         </div>
       </div>
     )
@@ -234,36 +205,35 @@ export const DiaryPage = () => {
   return (
     <div className="diary-page">
       {showToast && <ToastPortal message="Сохранено" onClose={() => setShowToast(false)} />}
+
+      {/* Верхняя панель */}
       <div className="diary-page__top-nav">
         <div className="diary-page__top-nav-left">
-          <div className="diary-page__pages-list">
-            {pages.map((p, index) => (
-              <button
-                key={p.id}
-                type="button"
-                className={`diary-page__nav-btn ${
-                  currentPageId === p.id ? 'diary-page__nav-btn--active' : ''
-                }`}
-                onClick={() => handleSelectPage(p.id)}
-                title={`Страница ${index + 1}`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-          <button type="button" className="diary-page__nav-btn" onClick={handleCreatePage}>
-            + Создать страницу
+          {/* CustomSelect для выбора страницы */}
+          <CustomSelect
+            value={currentPageId || ''}
+            onChange={handleSelectPage}
+            options={sortedPages.map((p, index) => ({
+              value: p.id,
+              label: `Страница ${sortedPages.length - index}${p.title ? ` – ${p.title}` : ''}`,
+            }))}
+            placeholder="Выберите страницу..."
+          />
+          <button type="button" className="diary-page__create-btn-small" onClick={handleCreatePage}>
+            + Создать
           </button>
           <button
             type="button"
-            className="diary-page__nav-btn diary-page__nav-btn--delete"
+            className="diary-page__delete-btn"
             onClick={() => setShowDeleteConfirm(true)}
-            title="Удалить страницу"
           >
-            🗑️
+            Удалить страницу
           </button>
         </div>
-        <SaveButton hasChanges={hasChanges} isSaving={isSaving} onClick={manualSave} />
+        {/* Кнопка сохранения — правый верхний угол */}
+        <div className="diary-page__save-wrapper">
+          <SaveButton hasChanges={hasChanges} isSaving={isSaving} onClick={manualSave} />
+        </div>
       </div>
 
       {/* Модалка подтверждения удаления */}
@@ -292,32 +262,34 @@ export const DiaryPage = () => {
         </div>
       )}
 
+      {/* Навигация по мыслям */}
       <div className="diary-page__thoughts-nav">
         <button
           type="button"
-          className={`diary-page__thought-btn ${
-            view === 'reveal' ? 'diary-page__thought-btn--active' : ''
-          }`}
+          className={`diary-page__thought-btn ${view === 'reveal' ? 'diary-page__thought-btn--active' : '' }`}
           onClick={handleRevealNav}
         >
           Выявление
         </button>
-        {page?.thoughts &&
-          page.thoughts.map((thought, index) => (
-            <button
-              key={thought.id}
-              type="button"
-              className={`diary-page__thought-btn ${
-                activeThoughtId === thought.id ? 'diary-page__thought-btn--active' : ''
-              }`}
-              onClick={() => handleThoughtNav(thought.id)}
-            >
-              Работа: мысль {index + 1}
-            </button>
-          ))}
+        <CustomSelect
+          value={activeThoughtId || ''}
+          onChange={handleThoughtNav}
+          options={
+            page?.thoughts
+              ? page.thoughts.map((thought, index) => ({
+                  value: thought.id,
+                  label: `Мысль ${index + 1}`,
+                }))
+              : []
+          }
+          placeholder="Выберите мысль..."
+        />
       </div>
 
-      <div className={`diary-page__content ${isTransitioning ? 'diary-page__content--fade-out' : ''}`}>
+      {/* Контент с fade-эффектом */}
+      <div
+        className={`diary-page__content ${isTransitioning ? 'diary-page__content--fade-out' : ''}`}
+      >
         <div key={contentKey} className="diary-page__content-inner">
           {view === 'reveal' && (
             <RevealPage

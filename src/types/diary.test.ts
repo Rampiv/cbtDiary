@@ -7,22 +7,20 @@ import {
 
 describe('createEmptyThought', () => {
   it('should create a thought with correct structure', () => {
-    const thought = createEmptyThought(1)
+    const thought = createEmptyThought()
 
-    expect(thought).toEqual({
-      id: 'thought-1',
-      automaticThought: null,
-      emotion: [],
-      behavioralReaction: null,
-    })
+    expect(thought).toHaveProperty('id')
+    expect(thought.automaticThought).toBeNull()
+    expect(thought.emotion).toEqual([])
+    expect(thought.behavioralReaction).toBeNull()
   })
 
-  it('should generate unique IDs based on index', () => {
-    const thought1 = createEmptyThought(1)
-    const thought2 = createEmptyThought(2)
+  it('should generate unique IDs', () => {
+    const thought1 = createEmptyThought()
+    const thought2 = createEmptyThought()
 
-    expect(thought1.id).toBe('thought-1')
-    expect(thought2.id).toBe('thought-2')
+    expect(thought1.id).toMatch(/^thought-/)
+    expect(thought2.id).toMatch(/^thought-/)
     expect(thought1.id).not.toBe(thought2.id)
   })
 })

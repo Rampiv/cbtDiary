@@ -3,75 +3,14 @@ import { ref, set, onValue, remove } from 'firebase/database'
 import { db, auth } from '../firebase/config'
 import type { DiaryPage, ThoughtWork } from '../types/diary'
 import { createEmptyDiaryPage, createEmptyThoughtWork } from '../types/diary'
-import { decryptData, encryptData } from '../utils/crypto'
 
-interface UseDiaryOptions {
-  encryptionEnabled?: boolean
-  encryptionPassword?: string
-}
-
-export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
-  const { encryptionEnabled = false, encryptionPassword = '' } = options
+export const useDiary = (pageId: string) => {
   const [page, setPage] = useState<DiaryPage | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [isPageLoading, setIsPageLoading] = useState(false)
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pageRef = useRef<DiaryPage | null>(null)
-  const justSavedRef = useRef(false)
-  const prevDecryptedRef = useRef<string>('')
-
-  // Расшифровка данных из Firebase
-  const decryptPageData = useCallback(
-    async (data: DiaryPage, password: string): Promise<DiaryPage> => {
-      if (!data._encrypted) return data
-
-      try {
-        const decrypted = (await decryptData(
-          data._encrypted.encrypted,
-          data._encrypted.salt,
-          data._encrypted.iv,
-          password
-        )) as DiaryPage
-
-        const rest = decrypted
-        delete rest._encrypted
-        return rest
-      } catch (error) {
-        console.error('Ошибка расшифровки:', error)
-        throw error
-      }
-    },
-    []
-  )
-
-  // Шифрование данных перед сохранением в Firebase
-  const encryptPageData = useCallback(
-    async (data: DiaryPage, password: string): Promise<DiaryPage> => {
-      try {
-        const { encrypted, salt, iv } = await encryptData(data, password)
-        return {
-          id: data.id,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt,
-          resource: null,
-          situation: null,
-          thoughts: [],
-          thoughtWorks: [],
-          _encrypted: {
-            encrypted,
-            salt,
-            iv,
-            version: 1,
-          },
-        }
-      } catch (error) {
-        console.error('Ошибка шифрования:', error)
-        throw error
-      }
-    },
-    []
-  )
 
   // Загрузка данных из Firebase
   useEffect(() => {
@@ -81,7 +20,6 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
       setPage(null)
       setHasChanges(false)
       setIsSaving(false)
-      prevDecryptedRef.current = ''
       return
     }
 
@@ -90,58 +28,31 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
       saveTimeoutRef.current = null
     }
 
-    // Устанавливаем состояние загрузки
     setIsPageLoading(true)
     setPage(null)
     setHasChanges(false)
     setIsSaving(false)
-    justSavedRef.current = false
-    prevDecryptedRef.current = ''
 
     const pageRefDb = ref(db, `users/${userId}/diary/${pageId}`)
-    const unsubscribe = onValue(pageRefDb, async (snapshot) => {
-      // Пропускаем onValue если только что сохранили мы сами
-      if (justSavedRef.current) {
-        justSavedRef.current = false
-        return
-      }
-
+    const unsubscribe = onValue(pageRefDb, (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        let processedData = data as DiaryPage
-
-        // Расшифровка если включено
-        if (encryptionEnabled && encryptionPassword) {
-          try {
-            processedData = await decryptPageData(processedData, encryptionPassword)
-          } catch (error) {
-            console.error('Не удалось расшифровать данные:', error)
-            return
-          }
-        }
-
-        // Сравниваем с предыдущим расшифрованным значением
-        const currentStr = JSON.stringify(processedData)
-        if (currentStr === prevDecryptedRef.current) {
-          // Данные не изменились — не обновляем state
-          return
-        }
-
-        prevDecryptedRef.current = currentStr
+        const processedData = data as DiaryPage
         setPage(processedData)
+        pageRef.current = processedData
         setHasChanges(false)
         setIsPageLoading(false)
       } else {
         const newPage = createEmptyDiaryPage(pageId)
-        prevDecryptedRef.current = JSON.stringify(newPage)
         setPage(newPage)
+        pageRef.current = newPage
         setHasChanges(false)
         setIsPageLoading(false)
       }
     })
 
     return () => unsubscribe()
-  }, [pageId, encryptionEnabled, encryptionPassword, decryptPageData])
+  }, [pageId])
 
   // Сохранение в Firebase
   const saveToFirebase = useCallback(async () => {
@@ -153,28 +64,17 @@ export const useDiary = (pageId: string, options: UseDiaryOptions = {}) => {
 
     setIsSaving(true)
     try {
-      let dataToSave = currentData
-
-      // Шифрование если включено
-      if (encryptionEnabled && encryptionPassword) {
-        dataToSave = await encryptPageData(currentData, encryptionPassword)
-      }
-
       const dbRef = ref(db, `users/${userId}/diary/${pageId}`)
-      const updatedData = { ...dataToSave, updatedAt: Date.now() }
+      const updatedData = { ...currentData, updatedAt: Date.now() }
       await set(dbRef, updatedData)
-
-      // Помечаем что мы только что сохранили
-      justSavedRef.current = true
 
       setHasChanges(false)
     } catch (error) {
       console.error('Ошибка сохранения:', error)
-      justSavedRef.current = false
     } finally {
       setIsSaving(false)
     }
-  }, [pageId, encryptionEnabled, encryptionPassword, encryptPageData])
+  }, [pageId])
 
   // Обновление страницы
   const updatePage = useCallback((updater: (prev: DiaryPage) => DiaryPage) => {

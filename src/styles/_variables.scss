@@ -1,47 +1,47 @@
 @use 'sass:color';
 
-// Базовые цвета
-$white: #fff;
-$black: #000;
+// CSS-переменные (темы)
+$white: var(--color-white);
+$black: var(--color-black);
 
 // Основные цвета бренда
-$main: #2319ee;
-$mainLight: #c3cfe2;
-$mainDark: #1f2937;
+$main: var(--color-main);
+$mainLight: var(--color-main-light);
+$mainDark: var(--color-main);
 
 // Текст
-$text: #23272e;
-$subText: #6b7280;
-$subTextDark: #374151;
+$text: var(--color-text-primary);
+$subText: var(--color-text-secondary);
+$subTextDark: var(--color-text-secondary);
 
 // Фоны
-$background: #f3f4f6;
-$fill: rgba($black, 0.15);
-$fillSecondary: rgba($black, 0.06);
-$fillTertiary: rgba($black, 0.04);
+$background: var(--color-bg-secondary);
+$fill: var(--color-fill);
+$fillSecondary: var(--color-fill-secondary);
+$fillTertiary: var(--color-fill-tertiary);
 
 // Состояния для $main (hover, disabled, shadows)
-$mainHover: #1f17b2;
-$mainDisabled: #a5b4fc;
-$mainShadow: rgba(79, 70, 229, 0.1);
+$mainHover: var(--color-main-hover);
+$mainDisabled: var(--color-main-disabled);
+$mainShadow: var(--color-main-shadow);
 
 // Состояния ошибок
-$errorBg: #fef2f2;
-$errorBorder: #fecaca;
-$errorText: #b91c1c;
+$errorBg: var(--color-error-bg);
+$errorBorder: var(--color-error-border);
+$errorText: var(--color-error-text);
 
 // Границы и разделители
-$borderLight: #e5e7eb;
-$borderMedium: #d1d5db;
-$dividerText: #9ca3af;
+$borderLight: var(--color-border-light);
+$borderMedium: var(--color-border-medium);
+$dividerText: var(--color-divider);
 
 // Disabled состояния
-$disabledBg: #f9fafb;
-$disabledOpacity: 0.7;
+$disabledBg: var(--color-disabled-bg);
+$disabledOpacity: var(--opacity-disabled);
 
 // Тени
-$shadowLight: rgba(0, 0, 0, 0.08);
-$shadowMedium: rgba(0, 0, 0, 0.1);
+$shadowLight: var(--color-shadow-light);
+$shadowMedium: var(--color-shadow-medium);
 
-$success: green;
-$error: red;
+$success: var(--color-success);
+$error: var(--color-error);

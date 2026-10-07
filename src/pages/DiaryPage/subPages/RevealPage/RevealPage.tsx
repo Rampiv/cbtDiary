@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Slider } from 'antd'
 import type { DiaryPage, Thought } from '../../../../types/diary'
-import { Accordion, InfoModal, TextEditor } from '../../../../components'
+import { InfoModal, TextEditor } from '../../../../components'
 
 interface RevealPageProps {
   page: DiaryPage
@@ -40,14 +40,30 @@ export const RevealPage = ({
     setShowDeleteConfirm(null)
   }
 
+  const handleTitleChange = (title: string) => {
+    updatePage((prev) => ({ ...prev, title }))
+  }
   return (
     <div className="reveal-page">
-      {/* Аккордеон 1: Ресурс */}
-      <Accordion
-        title="Ресурс"
-        description="Прежде чем погрузиться в рассуждения, нужно вспомнить о хорошем."
-        defaultOpen={true}
-      >
+      {/* Название страницы */}
+      <div className="reveal-page__title-section">
+        <h2 className="reveal-page__title">Название страницы</h2>
+        <p className="reveal-page__hint">Введите название для этой записи (необязательно)</p>
+        <input
+          type="text"
+          className="reveal-page__title-input"
+          placeholder="Например: Тревога на работе"
+          value={page.title || ''}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          onBlur={autoSave}
+        />
+      </div>
+
+      <div className="reveal-page__title-section">
+        <h2 className="reveal-page__title">Ресурс</h2>
+        <p className="reveal-page__hint">
+          Прежде чем погрузиться в рассуждения, нужно вспомнить о хорошем.
+        </p>
         <p className="reveal-page__hint">Что хорошего произошло за день?</p>
         <TextEditor
           editorId="resource"
@@ -56,14 +72,14 @@ export const RevealPage = ({
           onBlur={autoSave}
           placeholder="Опишите хорошие моменты..."
         />
-      </Accordion>
+      </div>
 
-      {/* Аккордеон 2: Выявление */}
-      <Accordion
-        title="Выявление"
-        description="Опишите проблемную ситуацию, в которой Вы почувствовали возникновение негативных эмоций."
-        defaultOpen={true}
-      >
+      <div className="reveal-page__title-section">
+        <h2 className="reveal-page__title">Выявление</h2>
+        <p className="reveal-page__hint">
+          Опишите проблемную ситуацию, в которой Вы почувствовали возникновение негативных эмоций.
+        </p>
+        <p className="reveal-page__hint">Что хорошего произошло за день?</p>
         <div className="reveal-page__field">
           <div className="reveal-page__field-header">
             <label className="reveal-page__label">Ситуация</label>
@@ -297,17 +313,18 @@ export const RevealPage = ({
         </button>
 
         <div className="reveal-page__actions">
-          {page.thoughts && page.thoughts.map((thought, index) => (
-            <div key={thought.id} className="reveal-page__action-row">
-              <button
-                type="button"
-                className="reveal-page__work-btn"
-                onClick={() => onWorkClick?.(thought.id) || startWorkOnThought(thought.id)}
-              >
-                Работать с мыслью {index + 1}
-              </button>
-            </div>
-          ))}
+          {page.thoughts &&
+            page.thoughts.map((thought, index) => (
+              <div key={thought.id} className="reveal-page__action-row">
+                <button
+                  type="button"
+                  className="reveal-page__work-btn"
+                  onClick={() => onWorkClick?.(thought.id) || startWorkOnThought(thought.id)}
+                >
+                  Работать с мыслью {index + 1}
+                </button>
+              </div>
+            ))}
         </div>
 
         {/* Модалка подтверждения удаления мысли */}
@@ -335,7 +352,7 @@ export const RevealPage = ({
             </div>
           </div>
         )}
-      </Accordion>
+      </div>
 
       {/* Модалки */}
       <InfoModal
@@ -364,8 +381,7 @@ export const RevealPage = ({
           «Он/она меня не ценит», «Всё ужасно», «Слишком тяжело», «У меня никогда не получится»
         </p>
         <p>
-          Это спонтанные мысли, которые могут быть оценочного характера, как правило,
-          категоричные.
+          Это спонтанные мысли, которые могут быть оценочного характера, как правило, категоричные.
         </p>
         <p>
           <strong>Подсказки:</strong>

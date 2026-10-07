@@ -39,13 +39,22 @@ export const Header = () => {
 
         <nav className="header__nav">
           <ul className="header__list">
-            {tabs.map((item) => (
-              <li className="header__item" key={item.title}>
-                <Link to={item.link} className={location.pathname === item.link ? 'active' : ''}>
-                  {item.title}
-                </Link>
-              </li>
-            ))}
+            {tabs.map((item) => {
+              const isActive = location.pathname === item.link
+              return (
+                <li className="header__item" key={item.title}>
+                  <Link
+                    to={item.link}
+                    className={location.pathname === item.link ? 'active' : ''}
+                    onClick={(e) => {
+                      if (isActive) e.preventDefault()
+                    }}
+                  >
+                    {item.title}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </nav>
 

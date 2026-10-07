@@ -29,7 +29,7 @@ const extensions = [
     },
   }),
   ListItem,
-  Underline.configure(),
+  Underline,
   TextStyle.configure(),
   Color.configure(),
 ]

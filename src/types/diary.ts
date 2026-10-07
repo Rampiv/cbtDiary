@@ -19,6 +19,8 @@ export interface ThoughtWork {
   thoughtId: string
   specification: EditorContent
   beliefScore: number
+  cognitiveDistortions: string[]
+  distortionsExplanation: EditorContent
   usefulness: {
     helps: EditorContent
     complicates: EditorContent
@@ -46,20 +48,15 @@ export interface DiaryPage {
   id: string
   createdAt: number
   updatedAt: number
+  title?: string
   resource: EditorContent
   situation: EditorContent
   thoughts: Thought[]
   thoughtWorks: ThoughtWork[]
-  _encrypted?: {
-    encrypted: string
-    salt: string
-    iv: string
-    version: number
-  }
 }
 
-export const createEmptyThought = (index: number): Thought => ({
-  id: `thought-${index}`,
+export const createEmptyThought = (): Thought => ({
+  id: `thought-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
   automaticThought: null,
   emotion: [],
   behavioralReaction: null,
@@ -69,6 +66,8 @@ export const createEmptyThoughtWork = (thoughtId: string): ThoughtWork => ({
   thoughtId,
   specification: null,
   beliefScore: 0,
+  cognitiveDistortions: [],
+  distortionsExplanation: null,
   usefulness: { helps: null, complicates: null },
   evidence: { for: null, against: null },
   alternative: null,
@@ -90,8 +89,9 @@ export const createEmptyDiaryPage = (id: string): DiaryPage => ({
   id,
   createdAt: Date.now(),
   updatedAt: Date.now(),
+  title: '',
   resource: null,
   situation: null,
-  thoughts: [createEmptyThought(1)],
+  thoughts: [createEmptyThought()],
   thoughtWorks: [],
 })

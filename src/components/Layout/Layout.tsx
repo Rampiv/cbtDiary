@@ -1,5 +1,4 @@
-import { Outlet } from 'react-router-dom'
-import { Header } from '..'
+import { PageTransition, Header } from '..'
 import './Layout.scss'
 
 export const Layout = () => {
@@ -7,7 +6,7 @@ export const Layout = () => {
     <div className="layout">
       <Header />
       <main className="layout__content">
-        <Outlet />
+        <PageTransition />
       </main>
     </div>
   )

@@ -1,242 +1,167 @@
 @use '../../styles/style.scss' as *;
 
 .helpful-page {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 16px 12px;
+  padding: 24px 16px;
+
+  // Header
+  &__header {
+    margin-bottom: 32px;
+  }
 
   &__title {
     @include textType15();
     & {
       color: $text;
-      margin: 0 0 8px 0;
+      margin: 0 0 12px 0;
       font-weight: 700;
-      text-align: center;
-      font-size: 20px;
     }
   }
 
-  &__intro {
-    @include textType08();
-    & {
-      color: $subText;
-      line-height: 1.5;
-      margin: 0 auto 16px auto;
-      text-align: center;
-      max-width: 600px;
-      font-size: 13px;
-    }
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  &__item {
-    padding: 10px 12px;
-    background: $background;
-    border-radius: 8px;
-    border-left: 3px solid $main;
-    transition: box-shadow 0.2s;
-
-    &:hover {
-      box-shadow: 0 2px 8px rgba($main, 0.08);
-    }
-  }
-
-  &__item-name {
+  &__description {
     @include textType1();
     & {
-      color: $main;
-      margin: 0 0 6px 0;
-      font-weight: 600;
-      font-size: 14px;
+      color: $subText;
+      margin: 0;
+      line-height: 1.6;
     }
   }
 
-  &__item-text {
+  // Cards grid
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  // Card link
+  &__card-link {
+    text-decoration: none;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  // Card
+  &__card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: $white;
+    border: 1.5px solid $borderLight;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $main;
+      box-shadow: 0 4px 12px rgba($main, 0.1);
+    }
+
+    [data-theme='dark'] & {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-border-medium);
+
+      &:hover {
+        border-color: var(--color-main);
+        box-shadow: 0 4px 12px rgba(2, 0, 108, 0.3);
+      }
+    }
+  }
+
+  &__card-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($main, 0.08);
+    border-radius: 12px;
+  }
+
+  &__card-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__card-type {
     @include textType08();
     & {
-      color: $text;
-      line-height: 1.5;
-      margin: 0 0 8px 0;
-      font-size: 13px;
+      display: inline-block;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      
+    }
+
+    [data-theme='dark'] & {
+      color: var(--color-text-primary);
     }
   }
 
-  &__item-example {
+  &__card-title {
+    @include textType1();
+    & {
+      color: $text;
+      margin: 0 0 6px 0;
+      font-weight: 600;
+    }
+  }
+
+  &__card-description {
     @include textType08();
     & {
       color: $subText;
-      line-height: 1.4;
       margin: 0;
-      font-style: italic;
-      padding-left: 10px;
-      border-left: 2px solid $borderMedium;
-      font-size: 12px;
+      line-height: 1.5;
     }
   }
 
-  &__example-label {
-    font-weight: 600;
-    color: $subTextDark;
-    font-style: normal;
-    margin-right: 4px;
+  &__card-arrow {
+    color: $subText;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+
+    .helpful-page__card-link:hover & {
+      color: $main;
+      transform: translateX(4px);
+    }
   }
 }
 
 // Адаптивность
-@media (max-width: 1024px) {
-  .helpful-page {
-    padding: 14px 12px;
-
-    &__title {
-      font-size: 19px;
-    }
-
-    &__intro {
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-
-    &__list {
-      gap: 9px;
-    }
-
-    &__item {
-      padding: 10px;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .helpful-page {
-    padding: 12px 10px;
-
-    &__title {
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
-    &__intro {
-      font-size: 12px;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    &__list {
-      gap: 8px;
-    }
-
-    &__item {
-      padding: 9px 10px;
-      border-radius: 7px;
-    }
-
-    &__item-name {
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
-
-    &__item-text {
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    &__item-example {
-      font-size: 11px;
-      padding-left: 8px;
-    }
-  }
-}
-
 @media (max-width: 650px) {
   .helpful-page {
-    padding: 10px 8px;
+    padding: 20px 12px;
 
-    &__title {
-      font-size: 17px;
+    &__card {
+      padding: 16px;
+      gap: 12px;
     }
 
-    &__item {
-      padding: 8px 10px;
-    }
-
-    &__item-name {
-      font-size: 13px;
+    &__card-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 24px;
     }
   }
 }
 
 @media (max-width: 480px) {
   .helpful-page {
-    padding: 10px 8px;
+    padding: 16px 10px;
 
     &__title {
-      font-size: 16px;
-      margin-bottom: 5px;
+      font-size: 22px;
     }
 
-    &__intro {
-      font-size: 11px;
-      margin-bottom: 10px;
-    }
-
-    &__list {
-      gap: 7px;
-    }
-
-    &__item {
-      padding: 8px 9px;
-      border-radius: 6px;
-    }
-
-    &__item-name {
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    &__item-text {
-      font-size: 11px;
-      margin-bottom: 5px;
-      line-height: 1.4;
-    }
-
-    &__item-example {
-      font-size: 11px;
-      padding-left: 7px;
-    }
-  }
-}
-
-@media (max-width: 360px) {
-  .helpful-page {
-    padding: 8px 6px;
-
-    &__title {
-      font-size: 15px;
-    }
-
-    &__intro {
-      font-size: 11px;
-    }
-
-    &__list {
-      gap: 6px;
-    }
-
-    &__item {
-      padding: 7px 8px;
-    }
-
-    &__item-name {
-      font-size: 12px;
-    }
-
-    &__item-text {
-      font-size: 11px;
+    &__card {
+      padding: 14px;
     }
   }
 }

@@ -123,6 +123,43 @@
       transform: scale(0.98);
     }
   }
+
+  // Тёмная тема
+  [data-theme='dark'] & {
+    background: var(--color-bg-primary);
+    border-bottom-color: var(--color-border-medium);
+    box-shadow: none;
+
+    &__list {
+      background: var(--color-bg-secondary);
+    }
+
+    &__item a {
+      color: var(--color-text-secondary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-fill);
+      }
+
+      &.active {
+        background: var(--color-fill);
+        color: var(--color-text-primary);
+        box-shadow: none;
+      }
+    }
+
+    &__logout {
+      color: var(--color-text-secondary);
+      border-color: var(--color-border-medium);
+
+      &:hover {
+        background: var(--color-error-bg);
+        border-color: var(--color-error-border);
+        color: var(--color-error-text);
+      }
+    }
+  }
 }
 
 // Планшеты (до 1024px)

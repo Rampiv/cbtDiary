@@ -1,0 +1,159 @@
+@use '../../styles/style.scss' as *;
+
+.cognitive-distortions-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+
+  // Header
+  &__header {
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  &__back-btn {
+    @include textType1();
+    & {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: $white;
+      border: 1.5px solid $borderMedium;
+      border-radius: 8px;
+      color: $text;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+
+      &:hover {
+        border-color: $main;
+        color: $main;
+        background: rgba($main, 0.05);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $main;
+        box-shadow: 0 0 0 3px rgba($main, 0.1);
+      }
+
+      [data-theme='dark'] & {
+        background: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+
+        &:hover {
+          background: var(--color-fill);
+        }
+      }
+    }
+  }
+
+  &__title {
+    @include textType15();
+    & {
+      color: $text;
+      margin: 0 0 12px 0;
+      font-weight: 700;
+    }
+  }
+
+  &__description {
+    @include textType1();
+    & {
+      color: $subText;
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+
+  // List
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  // Item
+  &__item {
+    padding: 20px;
+    background: $white;
+    border: 1.5px solid $borderLight;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $main;
+      box-shadow: 0 4px 12px rgba($main, 0.1);
+    }
+    [data-theme='dark'] & {
+        background: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+
+        &:hover {
+          background: var(--color-fill);
+        }
+      }
+  }
+
+  &__item-title {
+    @include textType1();
+    & {
+      color: $text;
+      margin: 0 0 12px 0;
+      font-weight: 600;
+    }
+  }
+
+  &__item-text {
+    @include textType08();
+    & {
+      color: $text;
+      margin: 0 0 12px 0;
+      line-height: 1.6;
+    }
+  }
+
+  &__item-example {
+    @include textType08();
+    & {
+      padding: 12px;
+      background: rgba($main, 0.05);
+      border-left: 3px solid $main;
+      border-radius: 6px;
+      color: $text;
+      line-height: 1.5;
+
+      strong {
+        color: $main;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 650px) {
+  .cognitive-distortions-page {
+    padding: 20px 12px;
+
+    &__item {
+      padding: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .cognitive-distortions-page {
+    padding: 16px 10px;
+
+    &__title {
+      font-size: 22px;
+    }
+
+    &__item {
+      padding: 14px;
+    }
+  }
+}

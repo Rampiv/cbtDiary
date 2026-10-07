@@ -1,0 +1,104 @@
+/* ==========================================================================
+   CSS-ПЕРЕМЕННЫЕ И ТЕМЫ
+   ========================================================================== */
+
+/* Светлая тема (по умолчанию) */
+:root {
+  /* Основные цвета */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f3f4f6;
+  --color-bg-tertiary: #f9fafb;
+
+  /* Текст */
+  --color-text-primary: #23272e;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+
+  /* Основной цвет бренда */
+  --color-main: #2319ee;
+  --color-main-hover: #1f17b2;
+  --color-main-light: #c3cfe2;
+  --color-main-disabled: #a5b4fc;
+  --color-main-shadow: rgba(79, 70, 229, 0.1);
+
+  /* Заполнители */
+  --color-fill: rgba(0, 0, 0, 0.15);
+  --color-fill-secondary: rgba(0, 0, 0, 0.06);
+  --color-fill-tertiary: rgba(0, 0, 0, 0.04);
+
+  /* Границы */
+  --color-border-light: #e5e7eb;
+  --color-border-medium: #d1d5db;
+
+  /* Разделители */
+  --color-divider: #9ca3af;
+
+  /* Состояния */
+  --color-success: #16a34a;
+  --color-success-bg: #f0fdf4;
+  --color-success-border: #bbf7d0;
+
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-error-text: #b91c1c;
+
+  /* Disabled */
+  --color-disabled-bg: #f9fafb;
+  --opacity-disabled: 0.7;
+
+  /* Тени */
+  --color-shadow-light: rgba(0, 0, 0, 0.08);
+  --color-shadow-medium: rgba(0, 0, 0, 0.1);
+  --color-shadow-heavy: rgba(0, 0, 0, 0.2);
+
+  /* Прозрачность */
+  --color-black: #000000;
+  --color-white: #ffffff;
+}
+
+/* Тёмная тема */
+[data-theme='dark'] {
+  --color-bg-primary: #28283bfe;
+  --color-bg-secondary: #34344dfe;
+  --color-bg-secondary-input: #2d2d42fe;
+  --color-bg-tertiary: #737f96;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e5e7eb;
+  --color-text-tertiary: #9ca3af;
+
+  --color-main: #7472c8;
+  --color-main-hover: #9f9fd0;
+  --color-main-light: #1d1d2bfe;
+  --color-main-disabled: #3b3b3b;
+  --color-main-shadow: rgba(2, 0, 108, 0.3);
+
+  --color-fill: rgba(255, 255, 255, 0.08);
+  --color-fill-secondary: rgba(255, 255, 255, 0.05);
+  --color-fill-tertiary: rgba(255, 255, 255, 0.03);
+
+  --color-border-light: #141414;
+  --color-border-medium: #222222;
+
+  --color-divider: #3b3b3b;
+
+  --color-success: #4ade80;
+  --color-success-bg: rgba(74, 222, 128, 0.1);
+  --color-success-border: rgba(74, 222, 128, 0.2);
+
+  --color-error: #f87171;
+  --color-error-bg: rgba(248, 113, 113, 0.1);
+  --color-error-border: rgba(248, 113, 113, 0.2);
+  --color-error-text: #fca5a5;
+
+  --color-disabled-bg: #141414;
+  --opacity-disabled: 0.5;
+
+  --color-shadow-light: rgba(0, 0, 0, 0.3);
+  --color-shadow-medium: rgba(0, 0, 0, 0.4);
+  --color-shadow-heavy: rgba(0, 0, 0, 0.6);
+
+  --color-black: #000000;
+  --color-white: #ffffff;
+}

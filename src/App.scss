@@ -33,6 +33,26 @@ body {
   padding: 0;
   border: 0;
   background-color: $mainLight;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Мобильные оптимизации */
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Убираем квадратный hover на мобильных */
+@media (hover: none) and (pointer: coarse) {
+  button:hover,
+  a:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
 }
 
 @font-face {

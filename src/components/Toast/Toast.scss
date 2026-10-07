@@ -26,6 +26,11 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     border-left: 4px solid $success;
     min-width: 200px;
+     [data-theme='dark'] & {
+      background: var(--color-bg-secondary-input);
+      border-color: var(--color-border-medium);
+      color: var(--color-text-primary);
+    }
   }
 
   &__icon {

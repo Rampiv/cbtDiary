@@ -20,6 +20,11 @@
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
+
+    [data-theme='dark'] & {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-border-medium);
+    }
   }
 
   &__section-title {
@@ -97,7 +102,15 @@
       border-radius: 8px;
       color: $text;
       box-sizing: border-box;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+
+      [data-theme='dark'] & {
+        background: var(--color-bg-secondary-input);
+        border-color: var(--color-border-medium);
+        color: var(--color-text-primary);
+      }
 
       &:focus {
         outline: none;
@@ -180,6 +193,62 @@
     }
   }
 
+  &__select-download {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+
+    .custom-select {
+      @include textType1();
+      & {
+        flex: 1;
+        width: fit-content;
+        min-width: fit-content;
+        max-width: fit-content;
+      }
+    }
+  }
+
+  &__download-selected {
+    @include textType1();
+    & {
+      padding: 8px 20px;
+      background: $white;
+      border: 1.5px solid $borderMedium;
+      border-radius: 8px;
+      color: $text;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      &:hover:not(:disabled) {
+        border-color: $main;
+        color: $main;
+        background: rgba($main, 0.05);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      [data-theme='dark'] & {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-medium);
+        color: var(--color-text-primary);
+
+        &:hover:not(:disabled) {
+          background: var(--color-fill);
+        }
+      }
+    }
+  }
+
   &__progress-bar {
     width: 100%;
     height: 4px;
@@ -187,6 +256,10 @@
     border-radius: 2px;
     margin-top: 8px;
     overflow: hidden;
+
+    [data-theme='dark'] & {
+      background: rgba(255, 255, 255, 0.15);
+    }
   }
 
   &__progress-fill {
@@ -194,6 +267,10 @@
     background: $white;
     border-radius: 2px;
     transition: width 0.3s ease;
+
+    [data-theme='dark'] & {
+      background: var(--color-text-primary);
+    }
   }
 
   &__pages-list {
@@ -257,112 +334,14 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
-    }
-  }
 
-  // Шифрование
-  &__encryption-info {
-    margin-bottom: 16px;
+      [data-theme='dark'] & {
+        background: var(--color-bg-secondary);
+        border-color: var(--color-border-medium);
+        color: var(--color-text-primary);
 
-    p {
-      @include textType08();
-      & {
-        color: $text;
-        margin: 0 0 8px 0;
-        line-height: 1.5;
-      }
-    }
-  }
-
-  &__warning {
-    @include textType08();
-    & {
-      color: #dc3545;
-      font-weight: 500;
-      background: rgba(220, 53, 69, 0.1);
-      padding: 12px !important;
-      border-radius: 8px;
-    }
-  }
-
-  &__encryption-toggle {
-    margin-bottom: 16px;
-  }
-
-  &__toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-  }
-
-  &__toggle-switch {
-    position: relative;
-    width: 48px;
-    height: 24px;
-    background: $borderMedium;
-    border-radius: 12px;
-    transition: background 0.3s;
-    flex-shrink: 0;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 20px;
-      height: 20px;
-      background: $white;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
-
-    &[aria-checked='true'] {
-      background: $main;
-
-      &::after {
-        transform: translateX(24px);
-      }
-    }
-  }
-
-  &__toggle-slider {
-    display: none;
-  }
-
-  &__toggle-text {
-    @include textType08();
-    & {
-      font-weight: 500;
-      color: $text;
-    }
-  }
-
-  &__encryption-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid $borderLight;
-  }
-
-  &__encryption-status {
-    margin-top: 16px;
-    padding: 12px;
-    background: rgba(40, 167, 69, 0.1);
-    border-radius: 8px;
-    border-left: 3px solid #28a745;
-
-    p {
-      @include textType08();
-      & {
-        color: $text;
-        margin: 0 0 8px 0;
-        line-height: 1.5;
-
-        &:last-child {
-          margin-bottom: 0;
+        &:hover:not(:disabled) {
+          background: var(--color-fill);
         }
       }
     }
@@ -376,27 +355,98 @@
     }
   }
 
-  &__submit--encryption {
-    margin-top: 8px;
+  // Тема оформления
+  &__theme-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  &__submit--disable {
-    margin-top: 12px;
-    background: #dc3545;
+  &__toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
 
-    &:hover:not(:disabled) {
-      background: #c82333;
-    }
-
-    &:disabled {
-      background: #dc354580;
+  &__toggle-text {
+    @include textType1();
+    & {
+      font-weight: 500;
+      color: $text;
     }
   }
 
-  &__disable-form {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid $borderLight;
+  &__theme-switch {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    background: $borderMedium;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex-shrink: 0;
+
+    &:hover {
+      background: $borderLight;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: $white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme='dark'] & {
+      background: var(--color-border-medium);
+
+      &:hover {
+        background: var(--color-fill);
+      }
+
+      &::after {
+        background: var(--color-text-primary);
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Политика конфиденциальности
+  &__section--footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid $borderLight;
+  }
+
+  &__privacy-link {
+    @include textType1();
+    & {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: $main;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 12px 16px;
+      background: rgba($main, 0.05);
+      border: 1px solid rgba($main, 0.2);
+      border-radius: 8px;
+      transition: all 0.2s;
+
+      &:hover {
+        background: rgba($main, 0.1);
+        border-color: $main;
+        transform: translateX(4px);
+      }
+    }
   }
 }
 

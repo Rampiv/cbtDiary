@@ -36,6 +36,11 @@
     padding: 24px;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    [data-theme='dark'] & {
+      background: var(--color-bg-secondary-input);
+      border-color: var(--color-border-medium);
+      color: var(--color-text-primary);
+    }
   }
 
   // ЛИЦЕВАЯ СТОРОНА
@@ -113,6 +118,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: 0 3px 10px rgba($main, 0.3);
+      
     }
 
     &:hover {
@@ -393,7 +399,7 @@
     height: 18px;
   }
 
-    // Ссылка "Забыли пароль?"
+  // Ссылка "Забыли пароль?"
   &__forgot-password {
     @include textType08();
     & {
@@ -468,7 +474,6 @@
     }
   }
 }
-
 
 // ==========================================================================
 // АДАПТИВНОСТЬ

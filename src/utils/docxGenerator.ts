@@ -16,8 +16,8 @@ import {
 } from 'docx'
 import { saveAs } from 'file-saver'
 import type { DiaryPage, Thought } from '../types/diary'
-
 import type { EditorContentNode } from '../types/diary'
+import { COGNITIVE_DISTORTIONS } from './cognitiveDistortions'
 
 // Извлекаем текст из Tiptap JSON
 const extractText = (content: EditorContentNode | null | undefined): string => {
@@ -240,6 +240,22 @@ const createThoughtChildren = (
       )
     )
     children.push(makeLabelValue('Дистанцирование', formatContent(work.distancing)))
+
+    // Анализ: Когнитивные искажения
+    if (work.cognitiveDistortions && work.cognitiveDistortions.length > 0) {
+      const distortionNames = work.cognitiveDistortions
+        .map((distId) => {
+          const distortion = COGNITIVE_DISTORTIONS.find((d) => d.id === distId)
+          return distortion?.name || distId
+        })
+        .join(', ')
+
+      children.push(makeLabelValue('Когнитивные искажения', distortionNames))
+      children.push(makeLabelValue('Объяснение', formatContent(work.distortionsExplanation)))
+    } else {
+      children.push(makeLabelValue('Когнитивные искажения', '(не выбрано)'))
+    }
+
     children.push(
       makeLabelValue(
         'Реалистичный ответ',

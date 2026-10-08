@@ -3,6 +3,7 @@ import { Slider } from 'antd'
 import type { DiaryPage, ThoughtWork } from '../../../../types/diary'
 import { Accordion, InfoModal, ReadOnlyContent, TextEditor } from '../../../../components'
 import { COGNITIVE_DISTORTIONS } from '../../../../utils/cognitiveDistortions'
+import { Link } from 'react-router-dom'
 
 interface ThoughtWorkPageProps {
   page: DiaryPage
@@ -339,13 +340,13 @@ export const ThoughtWorkPage = ({
       <Accordion title="Анализ: Когнитивные искажения" defaultOpen={false}>
         <div className="thought-work-page__field">
           <div className="thought-work-page__hint">
-            <a
-              href="./helpful/cognitive-distortions"
+            <Link
+              to="./helpful/cognitive-distortions"
               className="thought-work-page__distortions-link"
               rel="noopener noreferrer"
             >
               Подробнее о когнитивных искажениях
-            </a>
+            </Link>
           </div>
 
           {/* Мультиселект для когнитивных искажений */}

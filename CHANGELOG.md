@@ -1,3 +1,9 @@
+## 1.0.2
+### Fixes
+- **RevealPage** - правки текста.
+- **ThoughtWorkPage** - правка ссылки на когнитивные искажения.
+- **Accordion** - в body добавлены top padding.
+
 ## 1.0.1
 ### Fixes
 - **Custom select** - фикс открытой стрелки. Теперь она не сдвигается при rotate.

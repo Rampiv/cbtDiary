@@ -79,7 +79,6 @@ export const RevealPage = ({
         <p className="reveal-page__hint">
           Опишите проблемную ситуацию, в которой Вы почувствовали возникновение негативных эмоций.
         </p>
-        <p className="reveal-page__hint">Что хорошего произошло за день?</p>
         <div className="reveal-page__field">
           <div className="reveal-page__field-header">
             <label className="reveal-page__label">Ситуация</label>

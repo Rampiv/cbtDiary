@@ -30,7 +30,7 @@
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 
       .custom-select__arrow {
-        transform: rotate(180deg);
+        transform: rotate(180deg) translateY(50%);
       }
     }
 

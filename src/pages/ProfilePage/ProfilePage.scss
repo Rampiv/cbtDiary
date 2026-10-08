@@ -473,3 +473,61 @@
     }
   }
 }
+@media (max-width: 450px) {
+  .profile-page {
+    padding: 2px;
+  }
+}
+
+@media (max-width: 250px) {
+  .profile-page {
+    &__section {
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    &__section-title {
+      font-size: 16px;
+    }
+
+    &__info-row {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    &__form {
+      gap: 8px;
+    }
+
+    &__input {
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+
+    &__submit {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    &__download-all {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    &__select-download {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    &__download-selected {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    &__privacy-link {
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+  }
+}

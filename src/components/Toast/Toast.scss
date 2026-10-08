@@ -46,3 +46,22 @@
     color: $text;
   }
 }
+
+@media (max-width: 250px) {
+  .toast {
+    &__content {
+      padding: 8px 12px;
+      min-width: 160px;
+      font-size: 11px;
+    }
+
+    &__icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    &__message {
+      font-size: 11px;
+    }
+  }
+}

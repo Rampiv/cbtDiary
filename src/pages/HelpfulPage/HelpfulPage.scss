@@ -8,6 +8,9 @@
   // Header
   &__header {
     margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   &__title {
@@ -25,6 +28,7 @@
       color: $subText;
       margin: 0;
       line-height: 1.6;
+      text-align: center;
     }
   }
 
@@ -96,7 +100,6 @@
       border-radius: 6px;
       font-weight: 600;
       margin-bottom: 8px;
-      
     }
 
     [data-theme='dark'] & {
@@ -154,7 +157,7 @@
 
 @media (max-width: 480px) {
   .helpful-page {
-    padding: 16px 10px;
+    padding: 2px;
 
     &__title {
       font-size: 22px;
@@ -162,6 +165,59 @@
 
     &__card {
       padding: 14px;
+    }
+  }
+}
+
+@media (max-width: 250px) {
+  .helpful-page {
+    padding: 8px 6px;
+
+    &__title {
+      font-size: 16px;
+    }
+
+    &__hint {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    &__card {
+      padding: 10px;
+      gap: 8px;
+    }
+
+    &__card-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+    }
+
+    &__card-title {
+      font-size: 14px;
+    }
+
+    &__card-content {
+      font-size: 12px;
+    }
+
+    &__card-type {
+      font-size: 10px;
+      padding: 2px 6px;
+    }
+
+    &__search-input {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    &__card-grid {
+      gap: 8px;
+    }
+
+    &__card {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 }

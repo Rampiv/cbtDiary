@@ -123,3 +123,8 @@ section {
     padding: 5px;
   }
 }
+@media (max-width: 250px) {
+  body {
+    overflow-x: hidden;
+  }
+}

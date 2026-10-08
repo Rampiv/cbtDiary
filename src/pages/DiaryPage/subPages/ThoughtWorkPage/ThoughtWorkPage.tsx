@@ -340,7 +340,7 @@ export const ThoughtWorkPage = ({
         <div className="thought-work-page__field">
           <div className="thought-work-page__hint">
             <a
-              href="/helpful/cognitive-distortions"
+              href="./helpful/cognitive-distortions"
               className="thought-work-page__distortions-link"
               rel="noopener noreferrer"
             >

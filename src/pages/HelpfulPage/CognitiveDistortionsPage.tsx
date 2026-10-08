@@ -100,7 +100,7 @@ export const CognitiveDistortionsPage = () => {
           className="cognitive-distortions-page__back-btn"
           onClick={() => navigate('/helpful')}
         >
-          ← Назад
+          ← В полезное
         </button>
         <h1 className="cognitive-distortions-page__title">Когнитивные искажения</h1>
         <p className="cognitive-distortions-page__description">

@@ -28,6 +28,10 @@
     &:hover {
       background: $fillTertiary;
     }
+
+     [data-theme='dark'] & {
+      background: var(--color-bg-primary);
+    }
   }
 
   &__header-content {
@@ -104,6 +108,32 @@
 
     &__body {
       color: var(--color-text-primary);
+    }
+  }
+}
+
+@media (max-width: 250px) {
+  .accordion {
+    &__header {
+      padding: 10px 12px;
+    }
+
+    &__title {
+      font-size: 12px;
+    }
+
+    &__description {
+      font-size: 11px;
+    }
+
+    &__body {
+      padding: 0 10px 10px 10px;
+      font-size: 11px;
+    }
+
+    &__icon {
+      width: 18px;
+      height: 18px;
     }
   }
 }

@@ -133,3 +133,38 @@
     }
   }
 }
+
+@media (max-width: 250px) {
+  .privacy-page {
+    padding: 8px 6px;
+
+    &__title {
+      font-size: 16px;
+    }
+
+    &__section {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+    }
+
+    &__section-title {
+      font-size: 14px;
+    }
+
+    &__text {
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    &__data-item,
+    &__right-item {
+      padding: 8px;
+      font-size: 11px;
+    }
+
+    &__list {
+      padding-left: 16px;
+      font-size: 11px;
+    }
+  }
+}

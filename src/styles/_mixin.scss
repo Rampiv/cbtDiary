@@ -56,7 +56,7 @@
 @mixin textSettings() {
   & {
     font-family: 'Alice', 'Roboto', sans-serif;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
   }
 }
 
@@ -98,6 +98,9 @@
     font-size: 0.7rem;
   }
   @media (max-width: 350px) {
+    font-size: 0.55rem;
+  }
+  @media (max-width: 250px) {
     font-size: 0.5rem;
   }
 }
@@ -109,7 +112,10 @@
     font-size: 0.8rem;
   }
   @media (max-width: 350px) {
-    font-size: 0.5rem;
+    font-size: 0.65rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 0.55rem;
   }
 }
 
@@ -120,7 +126,10 @@
     font-size: 1rem;
   }
   @media (max-width: 350px) {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 0.75rem;
   }
 }
 
@@ -133,6 +142,9 @@
   @media (max-width: 350px) {
     font-size: 1rem;
   }
+  @media (max-width: 250px) {
+    font-size: 0.85rem;
+  }
 }
 
 @mixin textType15() {
@@ -141,9 +153,9 @@
     font-size: 1.5rem;
   }
   @media (max-width: 350px) {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
-  @media (max-width: 320px) {
+  @media (max-width: 250px) {
     font-size: 1rem;
   }
 }
@@ -156,12 +168,21 @@
   @media (max-width: 350px) {
     font-size: 1.5rem;
   }
+  @media (max-width: 250px) {
+    font-size: 1.2rem;
+  }
 }
 
 @mixin textType25() {
   @include textSettings();
   & {
     font-size: 2.5rem;
+  }
+  @media (max-width: 350px) {
+    font-size: 1.8rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 1.4rem;
   }
 }
 
@@ -170,12 +191,24 @@
   & {
     font-size: 3rem;
   }
+  @media (max-width: 350px) {
+    font-size: 2rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 1.5rem;
+  }
 }
 
 @mixin textType35() {
   @include textSettings();
   & {
     font-size: 3.5rem;
+  }
+  @media (max-width: 350px) {
+    font-size: 2.2rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 1.6rem;
   }
 }
 
@@ -184,6 +217,12 @@
   & {
     font-size: 4rem;
   }
+  @media (max-width: 350px) {
+    font-size: 2.5rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 1.8rem;
+  }
 }
 
 @mixin textType5() {
@@ -191,11 +230,23 @@
   & {
     font-size: 5rem;
   }
+  @media (max-width: 350px) {
+    font-size: 3rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 2rem;
+  }
 }
 
 @mixin textType7() {
   @include textSettings();
   & {
     font-size: 7rem;
+  }
+  @media (max-width: 350px) {
+    font-size: 4rem;
+  }
+  @media (max-width: 250px) {
+    font-size: 2.5rem;
   }
 }

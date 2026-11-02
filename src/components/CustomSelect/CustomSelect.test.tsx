@@ -260,7 +260,6 @@ describe('Keyboard', () => {
     const trigger = container.querySelector('[role="combobox"]')!
 
     fireEvent.click(trigger)
-    const options = container.querySelectorAll('[role="option"]')
 
     // Initially no option is active
     expect(trigger).not.toHaveAttribute('aria-activedescendant')

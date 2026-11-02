@@ -58,10 +58,10 @@
 
   &__guide-block {
     padding: 10px 12px;
-    background: $white;
     border-radius: 8px;
     border-left: 3px solid $main;
-
+    background: var(--color-bg-primar);
+    
     &--info {
       border-left-color: $success;
       background: rgba($success, 0.04);

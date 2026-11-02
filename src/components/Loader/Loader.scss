@@ -46,3 +46,15 @@
     }
   }
 }
+
+@media (max-width: 250px) {
+  .loader {
+    gap: 10px;
+
+    &__circle {
+      width: 32px;
+      height: 32px;
+      border-width: 3px;
+    }
+  }
+}

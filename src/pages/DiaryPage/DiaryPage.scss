@@ -523,7 +523,7 @@
     border: 1px solid $borderLight;
 
     [data-theme='dark'] & {
-      background: var(--color-bg-tertiary);
+      background: var(--color-bg-secondary-input);
       border-color: var(--color-border-medium);
     }
   }
@@ -542,6 +542,16 @@
     font-size: 13px;
     color: $text;
     min-width: 0;
+    [data-theme='dark'] & {
+      background: var(--color-bg-tertiary);
+      border-color: var(--color-border-medium);
+    }
+
+    &::placeholder {
+      [data-theme='dark'] & {
+        color: var(--color-text-sub)
+      }
+    }
 
     &:focus {
       outline: none;
@@ -1660,162 +1670,348 @@
 // Очень маленькие экраны (до 250px)
 @media (max-width: 250px) {
   .diary-page {
+    padding: 2px;
+
     &__top-nav {
+      display: flex;
       flex-direction: column;
-      gap: 4px;
-      padding: 4px;
+      gap: 3px;
+      margin-bottom: 4px;
     }
 
     &__top-nav-left {
-      flex-wrap: wrap;
-      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 3px;
+      flex: none;
     }
 
     &__save-wrapper {
       width: 100%;
       display: flex;
       justify-content: center;
+      order: -1;
+      flex: none;
     }
 
     &__create-btn-small,
     &__delete-btn {
-      padding: 4px 6px;
-      font-size: 10px;
+      padding: 2px 3px;
+      font-size: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      min-width: unset;
     }
 
     &__thoughts-nav {
+      display: flex;
       flex-direction: column;
-      gap: 3px;
-      padding: 4px;
+      gap: 2px;
+      margin-bottom: 4px;
     }
 
     &__thought-btn {
-      padding: 4px 8px;
-      font-size: 10px;
+      padding: 2px 4px;
+      font-size: 7px;
+      width: 100%;
+      text-align: center;
     }
 
     .custom-select {
-      min-width: 100%;
-      max-width: 100%;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
     }
 
     &__content-inner {
-      padding: 4px;
+      padding: 2px;
+      min-height: 150px;
     }
 
     &__modal {
-      max-width: 95%;
-      padding: 12px;
+      max-width: 98%;
+      padding: 6px;
+      margin: 0;
+    }
+
+    &__modal-overlay {
+      padding: 2px;
+    }
+
+    &__modal-actions {
+      flex-direction: column;
+      gap: 3px;
     }
 
     &__modal-btn {
-      padding: 6px 10px;
-      font-size: 10px;
+      padding: 3px 6px;
+      font-size: 7px;
+      width: 100%;
     }
   }
 
   .reveal-page {
-    &__title-input {
-      font-size: 12px;
-      padding: 6px 8px;
-    }
-
-    &__thoughts-table {
-      font-size: 10px;
-
-      th,
-      td {
-        padding: 4px;
-      }
-    }
-
-    &__add-btn {
-      padding: 6px;
-      font-size: 10px;
-    }
-
-    &__work-btn {
-      padding: 6px;
-      font-size: 10px;
-    }
-
-    &__emotion-input {
-      font-size: 10px;
-      padding: 4px 6px;
-    }
-
-    &__emotion-block {
+    &__title-section {
+      margin-bottom: 5px;
       padding: 4px;
-      gap: 3px;
     }
 
-    &__add-emotion-btn {
-      padding: 4px 6px;
-      font-size: 10px;
+    &__title {
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+
+    &__title-input {
+      font-size: 9px;
+      padding: 3px 4px;
+    }
+
+    &__hint {
+      font-size: 8px;
+      margin-bottom: 2px;
+    }
+
+    &__field {
+      margin-bottom: 4px;
+    }
+
+    &__field-header {
+      margin-bottom: 2px;
+    }
+
+    &__label {
+      font-size: 8px;
     }
 
     &__info-btn {
-      width: 18px;
-      height: 18px;
-      font-size: 9px;
+      width: 12px;
+      height: 12px;
+      font-size: 6px;
+    }
+
+    /* Таблица мыслей — полная вертикальная структура */
+    &__thoughts-table {
+      display: block;
+      width: 100%;
+      margin: 4px 0;
+      font-size: 8px;
+    }
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: block;
+      width: 100%;
+    }
+
+    tbody tr {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+      border: 1px solid $borderLight;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
     &__table-col {
+      display: block;
+      width: 100%;
       padding: 4px;
-    }
+      border-right: none !important;
+      border-bottom: 1px solid $borderLight;
 
-    &__mobile-header {
-      margin-bottom: 4px;
-      padding-bottom: 4px;
-
-      span {
-        font-size: 10px;
+      &:last-child {
+        border-bottom: none;
       }
     }
 
+    &__mobile-header {
+      display: flex;
+      margin-bottom: 3px;
+      padding-bottom: 2px;
+      gap: 3px;
+    }
+
+    &__mobile-header span {
+      font-size: 8px;
+      font-weight: 600;
+    }
+
+    &__mobile-header-actions {
+      display: flex;
+      gap: 2px;
+      margin-left: auto;
+    }
+
     &__delete-thought-btn {
-      font-size: 10px;
-      padding: 4px 6px;
+      font-size: 7px;
+      padding: 1px 3px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &__desktop-actions {
+      display: none !important;
+    }
+
+    /* Эмоции */
+    &__emotions-list {
+      display: block;
+      width: 100%;
+      gap: 3px;
+    }
+
+    &__emotion-block {
+      display: block;
+      width: 100%;
+      padding: 3px;
+      gap: 2px;
+      margin-bottom: 3px;
+    }
+
+    &__emotion-top {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    &__emotion-input {
+      font-size: 8px;
+      padding: 2px 4px;
+      width: 100%;
+    }
+
+    &__emotion-remove {
+      width: 14px;
+      height: 14px;
+    }
+
+    &__add-emotion-btn {
+      padding: 2px 4px;
+      font-size: 7px;
+      width: 100%;
+    }
+
+    &__add-btn {
+      padding: 3px;
+      font-size: 7px;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    /* Кнопки "Работать с мыслью" */
+    &__actions {
+      display: block;
+      margin-top: 4px;
+      gap: 3px;
+    }
+
+    &__action-row {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    &__work-btn {
+      padding: 3px;
+      font-size: 7px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Модалка удаления мысли */
+    &__modal-overlay {
+      padding: 2px;
+    }
+
+    &__modal {
+      max-width: 98%;
+      padding: 6px;
+    }
+
+    &__modal-actions {
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    &__modal-btn {
+      padding: 3px 6px;
+      font-size: 7px;
+      width: 100%;
     }
   }
 
   .thought-work-page {
     &__hint {
-      font-size: 10px;
-      margin-bottom: 6px;
+      font-size: 7px;
+      margin-bottom: 2px;
     }
 
     &__field {
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     &__slider-field {
+      margin-top: 4px;
+
       label {
-        font-size: 10px;
+        font-size: 7px;
+        margin-bottom: 2px;
       }
+    }
+
+    &__two-col {
+      grid-template-columns: 1fr;
+      gap: 4px;
     }
 
     &__next-btn {
-      padding: 6px 12px;
-      font-size: 10px;
+      padding: 3px 6px;
+      font-size: 7px;
+      margin-top: 4px;
+      width: 100%;
     }
 
     &__original-thought {
-      padding: 6px;
-      font-size: 10px;
+      padding: 4px;
+      font-size: 7px;
     }
 
     &__distortion-item {
-      padding: 4px 6px;
-      font-size: 10px;
+      padding: 2px 4px;
+      font-size: 7px;
     }
 
     &__modal-table {
+      margin: 4px 0;
+
       th,
       td {
-        padding: 4px;
-        font-size: 9px;
+        padding: 2px;
+        font-size: 6px;
       }
+    }
+
+    &__summary-col {
+      padding: 4px;
+
+      strong {
+        font-size: 7px;
+        margin-bottom: 2px;
+      }
+    }
+
+    &__summary-content {
+      font-size: 7px;
+    }
+
+    &__emotion-list {
+      padding-left: 10px;
+      font-size: 7px;
     }
   }
 }

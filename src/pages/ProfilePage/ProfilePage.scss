@@ -405,6 +405,15 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
+    // Сдвиг knob вправо при включённой тёмной теме
+    &--on {
+      background: $main;
+
+      &::after {
+        transform: translateX(24px);
+      }
+    }
+
     [data-theme='dark'] & {
       background: var(--color-border-medium);
 

@@ -49,15 +49,19 @@
 
 @media (max-width: 250px) {
   .toast {
+    bottom: 12px;
+    right: 12px;
+
     &__content {
-      padding: 8px 12px;
-      min-width: 160px;
+      padding: 6px 10px;
+      min-width: 140px;
+      gap: 8px;
       font-size: 11px;
     }
 
     &__icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
 
     &__message {

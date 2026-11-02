@@ -77,7 +77,7 @@ export const ReadOnlyContent = ({ content }: ReadOnlyContentProps) => {
   if (!editor) return null
 
   return (
-    <div className="read-only-content">
+    <div className="read-only-content" role="article" aria-label="Содержимое записи" aria-readonly="true">
       <EditorContent editor={editor} />
     </div>
   )

@@ -1,8 +1,23 @@
+## 1.0.3
+### Changes
+- **README.md** - удален пункт про шифрование. 
+- **FAQPage.tsx** - исправлен background guide block.
+- **Accordion, CustomSelect, Header, InfoModal, SaveButton, TextEditor** - доработана доступность a11y. Добавлены тесты.
+### Features
+- **FAQPage.tsx** - добавлен блок с android приложением.
+- **ThemeContext** - логика темы вынесена в отдельный файл.
+### Fixes
+- **ThoughWorksPage** - исправлено определение isSelected чекбоксов когнитивных искажений. Он мог возвращаться не boolean значение.
+- **DiaryPage, useDiary** - фикс логики.
+- **TextEditor** - работа с безопасностью импутов.
+
 ## 1.0.2
 ### Fixes
 - **RevealPage** - правки текста.
 - **ThoughtWorkPage** - правка ссылки на когнитивные искажения.
+### Redesign
 - **Accordion** - в body добавлены top padding.
+
 
 ## 1.0.1
 ### Fixes

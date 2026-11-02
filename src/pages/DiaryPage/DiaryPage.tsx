@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { ref, set } from 'firebase/database'
 import { db, auth } from '../../firebase/config'
 import { SaveButton } from '../../components/SaveButton/SaveButton'
@@ -7,11 +7,11 @@ import { createEmptyDiaryPage } from '../../types/diary'
 import './DiaryPage.scss'
 import { useDiary } from '../../hook/useDiary'
 import { RevealPage, ThoughtWorkPage } from './subPages'
-import { ToastPortal } from '../../components'
+import { Loader, ToastPortal } from '../../components'
 import { usePages } from '../../contexts/PagesContext'
 
 export const DiaryPage = () => {
-  const { pages } = usePages()
+  const { pages, hasFetched } = usePages()
   const [currentPageId, setCurrentPageId] = useState<string | null>(null)
   const [activeThoughtId, setActiveThoughtId] = useState<string | null>(null)
   const [view, setView] = useState<'reveal' | 'thought'>('reveal')
@@ -20,58 +20,78 @@ export const DiaryPage = () => {
   const [contentKey, setContentKey] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const prevIsSavingRef = useRef<boolean>(false)
-  const pageCounterRef = useRef(0)
-  const createdPageRef = useRef(false)
+  const manualSaveRef = useRef<(() => Promise<void>) | null>(null)
+  const isCreatingRef = useRef(false)
 
-  // Создание новой страницы
-  const handleCreatePage = async () => {
-    const userId = auth.currentUser?.uid
-    if (!userId) return
+  // ── Сортировка по createdAt (стабильная) ───────────────────────────
 
-    pageCounterRef.current += 1
-    const newId = `page-${pageCounterRef.current}`
-    const newPage = createEmptyDiaryPage(newId)
+  const sortedPages = useMemo(
+    () => [...pages].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)),
+    [pages]
+  )
 
+  // ── Вычисляемый ID текущей страницы ────────────────────────────────
+
+  const effectivePageId = useMemo(() => {
+    if (currentPageId && pages.some((p) => p.id === currentPageId)) {
+      return currentPageId
+    }
+    return sortedPages[sortedPages.length - 1]?.id ?? null
+  }, [currentPageId, pages, sortedPages])
+
+  // ── Создание страницы в Firebase (только запись, без setState) ──────
+
+  const createPageInDb = useCallback(async (): Promise<string | null> => {
+    if (isCreatingRef.current) return null
+    isCreatingRef.current = true
     try {
-      const pageRef = ref(db, `users/${userId}/diary/${newId}`)
-      await set(pageRef, newPage)
-      // Ждём загрузки новой страницы из Firebase
-      await new Promise((resolve) => setTimeout(resolve, 300))
-      // Сразу переключаемся на новую страницу
-      setCurrentPageId(newId)
-      setView('reveal')
-      setActiveThoughtId(null)
-      setContentKey((prev) => prev + 1)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      const userId = auth.currentUser?.uid
+      if (!userId) return null
+      const newId = `page-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`
+      const newPage = createEmptyDiaryPage(newId)
+      await set(ref(db, `users/${userId}/diary/${newId}`), newPage)
+      return newId
+    } finally {
+      isCreatingRef.current = false
+    }
+  }, [])
+
+  // ── Переключение страницы с flush-сохранением ──────────────────────
+
+  const switchToPage = useCallback(
+    async (pageId: string) => {
+      if (pageId === effectivePageId) return
+      if (manualSaveRef.current) await manualSaveRef.current()
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentPageId(pageId)
+        setView('reveal')
+        setActiveThoughtId(null)
+        setContentKey((prev) => prev + 1)
+        setTimeout(() => {
+          setIsTransitioning(false)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 300)
+      }, 150)
+    },
+    [effectivePageId]
+  )
+
+  // ── Обработчик кнопки «+ Создать» ─────────────────────────────────
+
+  const handleCreatePage = useCallback(async () => {
+    try {
+      const newId = await createPageInDb()
+      if (newId) await switchToPage(newId)
     } catch (error) {
       console.error('Ошибка создания страницы:', error)
     }
-  }
-
-  // Сортируем страницы по убыванию (свежие сверху) для DiaryPage
-  const sortedPages = [...pages].sort((a, b) => b.createdAt - a.createdAt)
-
-  // Автовыбор первой страницы при загрузке записей
-  useEffect(() => {
-    if (pages.length > 0 && !currentPageId) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- автовыбор страницы при загрузке
-      setCurrentPageId(sortedPages[0].id)
-    }
-  }, [pages.length])
-
-  // Автоматическое создание страницы, если её нет
-  useEffect(() => {
-    if (pages.length === 0 && auth.currentUser && !createdPageRef.current) {
-      createdPageRef.current = true
-      handleCreatePage()
-    }
-  }, [pages.length])
+  }, [createPageInDb, switchToPage])
 
   const {
     page,
     hasChanges,
     isSaving,
-    isPageLoading,
     updatePage,
     autoSave,
     manualSave,
@@ -80,9 +100,16 @@ export const DiaryPage = () => {
     deletePage,
     startWorkOnThought,
     updateThoughtWork,
-  } = useDiary(currentPageId || '')
+  } = useDiary(effectivePageId || '')
+
+  // Сохраняем manualSave в ref для await перед переключением
+
+  useEffect(() => {
+    manualSaveRef.current = manualSave
+  }, [manualSave])
 
   // Показ уведомления о сохранении
+
   useEffect(() => {
     const prevSaving = prevIsSavingRef.current
     prevIsSavingRef.current = isSaving
@@ -92,46 +119,30 @@ export const DiaryPage = () => {
     }
   }, [isSaving, hasChanges])
 
-  const handleDeletePage = async () => {
-    if (!currentPageId) return
+  const handleDeletePage = useCallback(async () => {
+    if (!effectivePageId) return
+    const remainingPages = sortedPages.filter((p) => p.id !== effectivePageId)
 
-    const success = await deletePage()
-    if (success) {
-      setShowDeleteConfirm(false)
-      setShowToast(true)
-      // Переключаемся на последнюю созданную страницу
-      if (sortedPages.length > 1) {
-        const remainingPages = sortedPages.filter((p) => p.id !== currentPageId)
-        if (remainingPages.length > 0) {
-          setIsTransitioning(true)
-          setTimeout(() => {
-            setCurrentPageId(remainingPages[0].id)
-            setView('reveal')
-            setActiveThoughtId(null)
-            setContentKey((prev) => prev + 1)
-            setTimeout(() => {
-              setIsTransitioning(false)
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }, 300)
-          }, 150)
-        }
-      }
+    setShowDeleteConfirm(false)
+    setShowToast(true)
+
+    const deleted = await deletePage()
+    if (!deleted) return
+
+    // Если остались страницы — переключаемся на последнюю
+    if (remainingPages.length > 0) {
+      await switchToPage(remainingPages[remainingPages.length - 1].id)
+    } else {
+      setCurrentPageId(null)
     }
-  }
+  }, [effectivePageId, sortedPages, switchToPage, deletePage])
 
-  const handleSelectPage = (pageId: string) => {
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentPageId(pageId)
-      setView('reveal')
-      setActiveThoughtId(null)
-      setContentKey((prev) => prev + 1)
-      setTimeout(() => {
-        setIsTransitioning(false)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }, 300)
-    }, 150)
-  }
+  const handleSelectPage = useCallback(
+    (pageId: string) => {
+      switchToPage(pageId)
+    },
+    [switchToPage]
+  )
 
   const handleStartWork = (thoughtId: string) => {
     setIsTransitioning(true)
@@ -191,12 +202,30 @@ export const DiaryPage = () => {
     }, 150)
   }
 
-  // Если нет страницы — показываем loader
-  if (!currentPageId || !page || isPageLoading) {
+  // ── Состояния загрузки / пустого списка ────────────────────────────
+
+  if (!hasFetched) {
+    return <Loader />
+  }
+
+  if (!page && effectivePageId) {
     return (
       <div className="diary-page">
         <div className="diary-page__empty">
           <h2>Загрузка записи...</h2>
+        </div>
+      </div>
+    )
+  }
+
+  if (!effectivePageId) {
+    return (
+      <div className="diary-page">
+        <div className="diary-page__empty">
+          <h2>Нет записей</h2>
+          <button type="button" className="diary-page__create-btn-small" onClick={handleCreatePage}>
+            + Создать первую запись
+          </button>
         </div>
       </div>
     )
@@ -211,11 +240,11 @@ export const DiaryPage = () => {
         <div className="diary-page__top-nav-left">
           {/* CustomSelect для выбора страницы */}
           <CustomSelect
-            value={currentPageId || ''}
+            value={effectivePageId || ''}
             onChange={handleSelectPage}
             options={sortedPages.map((p, index) => ({
               value: p.id,
-              label: `Страница ${sortedPages.length - index}${p.title ? ` – ${p.title}` : ''}`,
+              label: `Страница ${index + 1}: ${p.title || 'Без названия'}`,
             }))}
             placeholder="Выберите страницу..."
           />
@@ -266,7 +295,7 @@ export const DiaryPage = () => {
       <div className="diary-page__thoughts-nav">
         <button
           type="button"
-          className={`diary-page__thought-btn ${view === 'reveal' ? 'diary-page__thought-btn--active' : '' }`}
+          className={`diary-page__thought-btn ${view === 'reveal' ? 'diary-page__thought-btn--active' : ''}`}
           onClick={handleRevealNav}
         >
           Выявление

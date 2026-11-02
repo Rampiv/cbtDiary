@@ -85,7 +85,6 @@ export const ThoughtWorkPage = ({
             </button>
           </div>
           <TextEditor
-            editorId={`work-spec-${thought.id}-auto`}
             content={work.specification}
             onChange={(content) =>
               updateThoughtWork(thoughtId, (w) => ({ ...w, specification: content }))
@@ -104,6 +103,7 @@ export const ThoughtWorkPage = ({
             onChange={(value) =>
               updateThoughtWork(thoughtId, (w) => ({ ...w, beliefScore: value }))
             }
+            onChangeComplete={autoSave} 
             tooltip={{ formatter: (v) => `${v}%` }}
           />
         </div>
@@ -115,7 +115,6 @@ export const ThoughtWorkPage = ({
           <div className="thought-work-page__col">
             <label>Чем эта мысль мне помогает?</label>
             <TextEditor
-              editorId={`work-helps-${thought.id}-auto`}
               content={work.usefulness?.helps}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -130,7 +129,6 @@ export const ThoughtWorkPage = ({
           <div className="thought-work-page__col">
             <label>Как она усложняет мою жизнь?</label>
             <TextEditor
-              editorId={`work-complicates-${thought.id}-auto`}
               content={work.usefulness?.complicates}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -155,7 +153,6 @@ export const ThoughtWorkPage = ({
           <div className="thought-work-page__col">
             <label>Доказательства, подтверждающие реальность мысли</label>
             <TextEditor
-              editorId={`work-evidence-for-${thought.id}-auto`}
               content={work.evidence?.for}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -170,7 +167,6 @@ export const ThoughtWorkPage = ({
           <div className="thought-work-page__col">
             <label>Доказательства, опровергающие реальность мысли</label>
             <TextEditor
-              editorId={`work-evidence-against-${thought.id}-auto`}
               content={work.evidence?.against}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -192,7 +188,6 @@ export const ThoughtWorkPage = ({
           не так, как я сейчас представляю?
         </p>
         <TextEditor
-          editorId={`work-alternative-${thought.id}-auto`}
           content={work.alternative}
           onChange={(content) =>
             updateThoughtWork(thoughtId, (w) => ({ ...w, alternative: content }))
@@ -210,7 +205,6 @@ export const ThoughtWorkPage = ({
               Если мысль верна, то что самое худшее может произойти?
             </p>
             <TextEditor
-              editorId={`work-catastrophizing-worst-${thought.id}-auto`}
               content={work.catastrophizing.worst.content}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -238,6 +232,7 @@ export const ThoughtWorkPage = ({
                     },
                   }))
                 }
+                onChangeComplete={autoSave}
                 tooltip={{ formatter: (v) => `${v}%` }}
               />
             </div>
@@ -248,7 +243,6 @@ export const ThoughtWorkPage = ({
               Если мысль верна, то что самое лучшее может произойти?
             </p>
             <TextEditor
-              editorId={`work-catastrophizing-best-${thought.id}-auto`}
               content={work.catastrophizing.best.content}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -276,6 +270,7 @@ export const ThoughtWorkPage = ({
                     },
                   }))
                 }
+                onChangeComplete={autoSave} 
                 tooltip={{ formatter: (v) => `${v}%` }}
               />
             </div>
@@ -284,7 +279,6 @@ export const ThoughtWorkPage = ({
           <div className="thought-work-page__field">
             <p className="thought-work-page__hint">Какой вариант развития самый реалистичный?</p>
             <TextEditor
-              editorId={`work-catastrophizing-realistic-${thought.id}-auto`}
               content={work.catastrophizing.realistic.content}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({
@@ -312,6 +306,7 @@ export const ThoughtWorkPage = ({
                     },
                   }))
                 }
+                onChangeComplete={autoSave} 
                 tooltip={{ formatter: (v) => `${v}%` }}
               />
             </div>
@@ -326,7 +321,6 @@ export const ThoughtWorkPage = ({
           ситуации?
         </p>
         <TextEditor
-          editorId={`work-distancing-${thought.id}-auto`}
           content={work.distancing}
           onChange={(content) =>
             updateThoughtWork(thoughtId, (w) => ({ ...w, distancing: content }))
@@ -352,7 +346,7 @@ export const ThoughtWorkPage = ({
           {/* Мультиселект для когнитивных искажений */}
           <div className="thought-work-page__distortions-grid">
             {COGNITIVE_DISTORTIONS.map((distortion) => {
-              const isSelected = work.cognitiveDistortions?.includes(distortion.id)
+              const isSelected = work.cognitiveDistortions?.includes(distortion.id) ?? false
               return (
                 <label
                   key={distortion.id}
@@ -392,7 +386,6 @@ export const ThoughtWorkPage = ({
               Опишите подробнее, почему вы выбрали именно это(эти) искажения
             </label>
             <TextEditor
-              editorId={`work-distortions-explanation-${thought.id}-auto`}
               content={work.distortionsExplanation}
               onChange={(content) =>
                 updateThoughtWork(thoughtId, (w) => ({ ...w, distortionsExplanation: content }))
@@ -421,7 +414,6 @@ export const ThoughtWorkPage = ({
         <div className="thought-work-page__field">
           <label>Реалистичный ответ на основе всего анализа:</label>
           <TextEditor
-            editorId={`work-response-${thought.id}-auto`}
             content={work.reformulation.response}
             onChange={(content) =>
               updateThoughtWork(thoughtId, (w) => ({
@@ -444,6 +436,7 @@ export const ThoughtWorkPage = ({
                   reformulation: { ...w.reformulation, belief: value },
                 }))
               }
+              onChangeComplete={autoSave} 
               tooltip={{ formatter: (v) => `${v}%` }}
             />
           </div>
@@ -457,7 +450,6 @@ export const ThoughtWorkPage = ({
           сделать, чтобы что-то поменять? Каковы рамки моей ответственности?
         </p>
         <TextEditor
-          editorId={`work-action-${thought.id}-auto`}
           content={work.actionPlan}
           onChange={(content) =>
             updateThoughtWork(thoughtId, (w) => ({ ...w, actionPlan: content }))

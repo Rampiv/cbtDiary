@@ -10,3 +10,19 @@
     padding: 20px;
   }
 }
+
+@media (max-width: 480px) {
+  .layout {
+    &__content {
+      padding: 10px;
+    }
+  }
+}
+
+@media (max-width: 250px) {
+  .layout {
+    &__content {
+      padding: 5px;
+    }
+  }
+}

@@ -66,7 +66,6 @@ export const RevealPage = ({
         </p>
         <p className="reveal-page__hint">Что хорошего произошло за день?</p>
         <TextEditor
-          editorId="resource"
           content={page.resource}
           onChange={(content) => updatePage((prev) => ({ ...prev, resource: content }))}
           onBlur={autoSave}
@@ -91,7 +90,6 @@ export const RevealPage = ({
             </button>
           </div>
           <TextEditor
-            editorId="situation"
             content={page.situation}
             onChange={(content) => updatePage((prev) => ({ ...prev, situation: content }))}
             onBlur={autoSave}
@@ -168,7 +166,6 @@ export const RevealPage = ({
                     </div>
 
                     <TextEditor
-                      editorId={`thought-${thought.id}-auto`}
                       content={thought.automaticThought}
                       onChange={(content) =>
                         updateThought(thought.id, (t) => ({ ...t, automaticThought: content }))
@@ -262,6 +259,7 @@ export const RevealPage = ({
                                 return { ...t, emotion: newEmotions }
                               })
                             }
+                            onChangeComplete={autoSave} 
                             tooltip={{ formatter: (v) => `${v}%` }}
                           />
                         </div>
@@ -293,7 +291,6 @@ export const RevealPage = ({
                       </button>
                     </div>
                     <TextEditor
-                      editorId={`thought-${thought.id}-behavior`}
                       content={thought.behavioralReaction}
                       onChange={(content) =>
                         updateThought(thought.id, (t) => ({ ...t, behavioralReaction: content }))

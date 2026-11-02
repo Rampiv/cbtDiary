@@ -41,7 +41,7 @@ const makeParagraph = (
   text: string,
   options: {
     bold?: boolean
-    size?: number // в полупунктах (24 = 12pt)
+    size?: number 
     color?: string
     spacing?: { before?: number; after?: number }
     alignment?: 'left' | 'center' | 'right'

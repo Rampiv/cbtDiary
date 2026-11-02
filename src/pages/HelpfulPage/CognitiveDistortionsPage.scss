@@ -157,3 +157,48 @@
     }
   }
 }
+
+// Очень маленькие экраны (до 250px)
+@media (max-width: 250px) {
+  .cognitive-distortions-page {
+    padding: 8px 6px;
+
+    &__back-btn {
+      padding: 6px 10px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    &__title {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    &__description {
+      font-size: 11px;
+    }
+
+    &__list {
+      gap: 12px;
+    }
+
+    &__item {
+      padding: 10px;
+    }
+
+    &__item-title {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    &__item-text {
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    &__item-example {
+      padding: 8px;
+      font-size: 11px;
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { ToastPortal } from '../../components'
 import type { DiaryPage } from '../../types/diary'
 import './ProfilePage.scss'
 import { generateAllPagesDocx, generatePageDocx } from '../../utils/docxGenerator'
-import { useTheme } from '../../App'
+import { useTheme } from '../../contexts'
 import { CustomSelect } from '../../components/CustomSelect'
 
 interface ProfilePageProps {
@@ -135,8 +135,10 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
             </span>
             <button
               type="button"
-              className="profile-page__theme-switch"
+              className={`profile-page__theme-switch ${theme === 'dark' ? 'profile-page__theme-switch--on' : ''}`}
               onClick={toggleTheme}
+              role="switch"
+              aria-checked={theme === 'dark'}
               aria-label="Переключить тему"
             >
               <span className="profile-page__theme-switch-slider" />

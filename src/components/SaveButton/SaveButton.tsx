@@ -13,6 +13,8 @@ export const SaveButton = ({ hasChanges, isSaving, onClick }: SaveButtonProps) =
       className={`save-button ${hasChanges ? 'save-button--active' : ''}`}
       onClick={onClick}
       disabled={!hasChanges || isSaving}
+      aria-label={hasChanges ? 'Сохранить изменения' : 'Все изменения сохранены'}
+      aria-busy={isSaving || undefined}
       title={hasChanges ? 'Сохранить изменения' : 'Все изменения сохранены'}
     >
       <svg
@@ -24,6 +26,8 @@ export const SaveButton = ({ hasChanges, isSaving, onClick }: SaveButtonProps) =
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
         <polyline points="17 21 17 13 7 13 7 21" />

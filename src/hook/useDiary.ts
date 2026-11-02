@@ -11,15 +11,29 @@ export const useDiary = (pageId: string) => {
   const [isPageLoading, setIsPageLoading] = useState(false)
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pageRef = useRef<DiaryPage | null>(null)
+  const hasChangesRef = useRef(false)
+  const currentPageIdRef = useRef<string | null>(null)
+
+  // Сброс состояния при смене pageId
+
+  const resetState = useCallback(() => {
+    setPage(null)
+    setHasChanges(false)
+    setIsSaving(false)
+    setIsPageLoading(false)
+  }, [])
 
   // Загрузка данных из Firebase
+
   useEffect(() => {
+    currentPageIdRef.current = pageId
     const userId = auth.currentUser?.uid
+
     if (!userId || !pageId) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setPage(null)
-      setHasChanges(false)
-      setIsSaving(false)
+      resetState()
+      pageRef.current = null
+      hasChangesRef.current = false
       return
     }
 
@@ -29,109 +43,107 @@ export const useDiary = (pageId: string) => {
     }
 
     setIsPageLoading(true)
-    setPage(null)
-    setHasChanges(false)
-    setIsSaving(false)
+    resetState()
+    pageRef.current = null
+    hasChangesRef.current = false
 
-    const pageRefDb = ref(db, `users/${userId}/diary/${pageId}`)
+    const dbPath = `users/${userId}/diary/${pageId}`
+    const pageRefDb = ref(db, dbPath)
+
     const unsubscribe = onValue(pageRefDb, (snapshot) => {
+      if (currentPageIdRef.current !== pageId) return
+
       const data = snapshot.val()
       if (data) {
         const processedData = data as DiaryPage
         setPage(processedData)
-        pageRef.current = processedData
-        setHasChanges(false)
-        setIsPageLoading(false)
+        if (!hasChangesRef.current) {
+          pageRef.current = processedData
+          setHasChanges(false)
+        }
       } else {
         const newPage = createEmptyDiaryPage(pageId)
         setPage(newPage)
         pageRef.current = newPage
         setHasChanges(false)
-        setIsPageLoading(false)
       }
+      setIsPageLoading(false)
+    }, (error) => {
+      console.error(`Ошибка загрузки страницы ${pageId}:`, error)
+      pageRef.current = null
+      hasChangesRef.current = false
+      setIsPageLoading(false)
     })
 
     return () => unsubscribe()
-  }, [pageId])
+  }, [pageId, resetState])
 
   // Сохранение в Firebase
-  const saveToFirebase = useCallback(async () => {
+
+  const saveToFirebase = useCallback(async (data: DiaryPage, id: string) => {
     const userId = auth.currentUser?.uid
     if (!userId) return
 
-    const currentData = pageRef.current
-    if (!currentData) return
-
     setIsSaving(true)
     try {
-      const dbRef = ref(db, `users/${userId}/diary/${pageId}`)
-      const updatedData = { ...currentData, updatedAt: Date.now() }
+      const dbRef = ref(db, `users/${userId}/diary/${id}`)
+      const updatedData = { ...data, createdAt: data.createdAt, updatedAt: Date.now() }
       await set(dbRef, updatedData)
-
+      hasChangesRef.current = false
       setHasChanges(false)
     } catch (error) {
       console.error('Ошибка сохранения:', error)
     } finally {
       setIsSaving(false)
     }
-  }, [pageId])
-
-  // Обновление страницы
-  const updatePage = useCallback((updater: (prev: DiaryPage) => DiaryPage) => {
-    setPage((prev) => {
-      if (!prev) return prev
-      const updated = updater(prev)
-      pageRef.current = updated
-      setHasChanges(true)
-      return updated
-    })
   }, [])
 
-  // Автосохранение
-  useEffect(() => {
+  // Ручное и мгновенное сохранение
+
+  const manualSave = useCallback(async () => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current)
     }
-
-    if (hasChanges && page) {
-      saveTimeoutRef.current = setTimeout(() => {
-        saveToFirebase()
-      }, 1000)
+    if (pageRef.current) {
+      await saveToFirebase(pageRef.current, pageId)
     }
+  }, [pageId, saveToFirebase])
 
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current)
-      }
-    }
-  }, [hasChanges, page, saveToFirebase])
-
-  // Ручное сохранение
-  const manualSave = useCallback(() => {
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current)
-    }
-    saveToFirebase()
-  }, [saveToFirebase])
-
-  // Мгновенное сохранение
   const autoSave = useCallback(() => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current)
     }
-    if (hasChanges) {
-      saveToFirebase()
+    if (hasChangesRef.current && pageRef.current) {
+      hasChangesRef.current = false
+      saveToFirebase(pageRef.current, pageId)
     }
-  }, [hasChanges, saveToFirebase])
+  }, [pageId, saveToFirebase])
 
-  // УДАЛЕНИЕ СТРАНИЦЫ
+  // Обновление страницы
+
+  const updatePage = useCallback((updater: (prev: DiaryPage) => DiaryPage) => {
+    const prev = pageRef.current
+    if (!prev) return
+    if (prev.id !== currentPageIdRef.current) return
+
+    const next = updater(prev)
+    pageRef.current = next
+    hasChangesRef.current = true
+    setPage(next)
+    setHasChanges(true)
+  }, [])
+
+  // Удаление страницы
+
   const deletePage = useCallback(async () => {
     const userId = auth.currentUser?.uid
     if (!userId || !pageId) return
 
     try {
-      const pageRef = ref(db, `users/${userId}/diary/${pageId}`)
-      await remove(pageRef)
+      const dbPageRef = ref(db, `users/${userId}/diary/${pageId}`)
+      await remove(dbPageRef)
+      pageRef.current = null
+      hasChangesRef.current = false
       return true
     } catch (error) {
       console.error('Ошибка удаления страницы:', error)
@@ -140,6 +152,7 @@ export const useDiary = (pageId: string) => {
   }, [pageId])
 
   // Добавление мысли
+
   const addThought = useCallback(() => {
     updatePage((prev) => {
       if (!prev) return prev
@@ -148,7 +161,7 @@ export const useDiary = (pageId: string) => {
         thoughts: [
           ...(prev.thoughts || []),
           {
-            id: `thought-${(prev.thoughts?.length || 0) + 1}`,
+            id: `thought-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
             automaticThought: null,
             emotion: [],
             behavioralReaction: null,
@@ -158,7 +171,8 @@ export const useDiary = (pageId: string) => {
     })
   }, [updatePage])
 
-  // УДАЛЕНИЕ МЫСЛИ
+  // Удаление мысли
+
   const deleteThought = useCallback(
     (thoughtId: string) => {
       updatePage((prev) => {
@@ -174,6 +188,7 @@ export const useDiary = (pageId: string) => {
   )
 
   // Начало работы с мыслью
+
   const startWorkOnThought = useCallback(
     (thoughtId: string) => {
       updatePage((prev) => {
@@ -202,6 +217,7 @@ export const useDiary = (pageId: string) => {
   )
 
   // Обновление работы с мыслью
+
   const updateThoughtWork = useCallback(
     (thoughtId: string, updater: (work: ThoughtWork) => ThoughtWork) => {
       updatePage((prev) => {

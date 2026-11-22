@@ -11,12 +11,12 @@ import DiaryIcon from '../../assets/image/DiaryIcon.svg'
 export const AuthPage = () => {
   const [isFlipped, setIsFlipped] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
-  const [isResetMode, setIsResetMode] = useState(false) // Новый стейт для режима восстановления
+  const [isResetMode, setIsResetMode] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [resetSuccess, setResetSuccess] = useState(false) // Стейт для успешной отправки письма
+  const [resetSuccess, setResetSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const getErrorMessage = (code: string): string => {
@@ -68,7 +68,20 @@ export const AuthPage = () => {
     setIsFlipped(!isFlipped)
   }
 
-  // Сброс режима восстановления при переключении вкладок
+  const handleDemoLogin = async () => {
+    setError(null)
+    setResetSuccess(false)
+    setLoading(true)
+
+    try {
+      await signInWithEmailAndPassword(auth, 'test@test.test', 'testtest')
+    } catch (err: unknown) {
+      setError(getErrorMessage((err as { code?: string }).code ?? ''))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleTabChange = (loginMode: boolean) => {
     setIsLogin(loginMode)
     setIsResetMode(false)
@@ -91,8 +104,22 @@ export const AuthPage = () => {
                 автоматическими мыслями, эмоциями и поведенческими реакциями — ключевыми элементами
                 дневника КПТ.
               </p>
-              <button type="button" className="auth__front-btn" onClick={handleFlip}>
+              <button
+                type="button"
+                className="auth__front-btn"
+                onClick={handleFlip}
+                aria-label="Перейти к авторизации"
+              >
                 Авторизация
+              </button>
+              <button
+                type="button"
+                className="auth__front-btn auth__front-btn--demo"
+                onClick={handleDemoLogin}
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading ? 'Загрузка...' : 'Демо режим'}
               </button>
             </div>
           </div>
@@ -104,7 +131,7 @@ export const AuthPage = () => {
                 type="button"
                 className="auth__back-btn"
                 onClick={handleFlip}
-                aria-label="Назад"
+                aria-label="Назад к описанию"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,50 +143,73 @@ export const AuthPage = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
+                  focusable="false"
                 >
                   <path d="m12 19-7-7 7-7" />
                   <path d="M19 12H5" />
                 </svg>
               </button>
               <h2 className="auth__back-title">
-                {isResetMode 
-                  ? 'Восстановление пароля' 
-                  : isLogin 
-                    ? 'С возвращением!' 
+                {isResetMode
+                  ? 'Восстановление пароля'
+                  : isLogin
+                    ? 'С возвращением!'
                     : 'Создайте аккаунт'}
               </h2>
             </div>
 
-            {/* Табы скрываем в режиме восстановления */}
+            {/* Табы */}
             {!isResetMode && (
-              <div className="auth__tabs">
+              <div className="auth__tabs" role="tablist" aria-label="Авторизация или регистрация">
                 <button
+                  role="tab"
                   className={isLogin ? 'auth__tab auth__tab--active' : 'auth__tab'}
                   onClick={() => handleTabChange(true)}
                   type="button"
+                  aria-selected={isLogin}
+                  aria-controls="auth-login-panel"
+                  id="auth-login-tab"
                 >
                   Вход
                 </button>
                 <button
+                  role="tab"
                   className={!isLogin ? 'auth__tab auth__tab--active' : 'auth__tab'}
                   onClick={() => handleTabChange(false)}
                   type="button"
+                  aria-selected={!isLogin}
+                  aria-controls="auth-register-panel"
+                  id="auth-register-tab"
                 >
                   Регистрация
                 </button>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="auth__form">
+            <form onSubmit={handleSubmit} className="auth__form" noValidate>
               {/* Сообщение об успехе */}
               {resetSuccess && (
-                <div className="auth__success">
-                  Ссылка для восстановления пароля отправлена на <strong>{email}</strong>. 
+                <div
+                  className="auth__success"
+                  role="status"
+                  aria-live="polite"
+                >
+                  Ссылка для восстановления пароля отправлена на <strong>{email}</strong>.
                   Проверьте вашу почту (и папку "Спам").
                 </div>
               )}
 
-              {error && <div className="auth__error">{error}</div>}
+              {/* Ошибка */}
+              {error && (
+                <div
+                  className="auth__error"
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  {error}
+                </div>
+              )}
 
               <div className="auth__field">
                 <label htmlFor="email" className="auth__label">
@@ -174,6 +224,8 @@ export const AuthPage = () => {
                   placeholder="your@email.com"
                   required
                   disabled={loading}
+                  autoComplete="email"
+                  aria-required="true"
                 />
               </div>
 
@@ -193,6 +245,9 @@ export const AuthPage = () => {
                       placeholder="Минимум 6 символов"
                       required
                       disabled={loading}
+                      autoComplete={isLogin ? 'current-password' : 'new-password'}
+                      aria-required="true"
+                      aria-describedby={error ? 'auth-error' : undefined}
                     />
                     <button
                       type="button"
@@ -212,6 +267,8 @@ export const AuthPage = () => {
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          aria-hidden="true"
+                          focusable="false"
                         >
                           <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
                           <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
@@ -229,6 +286,8 @@ export const AuthPage = () => {
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          aria-hidden="true"
+                          focusable="false"
                         >
                           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                           <circle cx="12" cy="12" r="3" />
@@ -236,7 +295,7 @@ export const AuthPage = () => {
                       )}
                     </button>
                   </div>
-                  
+
                   {/* Ссылка "Забыли пароль?" только на вкладке Вход */}
                   {isLogin && (
                     <button
@@ -247,6 +306,7 @@ export const AuthPage = () => {
                         setError(null)
                         setResetSuccess(false)
                       }}
+                      disabled={loading}
                     >
                       Забыли пароль?
                     </button>
@@ -258,13 +318,14 @@ export const AuthPage = () => {
                 type="submit"
                 className={`auth__submit ${loading ? 'auth__submit--loading' : ''}`}
                 disabled={loading}
+                aria-busy={loading}
               >
-                {loading 
-                  ? 'Загрузка...' 
-                  : isResetMode 
-                    ? 'Отправить ссылку' 
-                    : isLogin 
-                      ? 'Войти' 
+                {loading
+                  ? 'Загрузка...'
+                  : isResetMode
+                    ? 'Отправить ссылку'
+                    : isLogin
+                      ? 'Войти'
                       : 'Зарегистрироваться'}
               </button>
 

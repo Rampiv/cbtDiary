@@ -205,12 +205,16 @@ export const DiaryPage = () => {
   // ── Состояния загрузки / пустого списка ────────────────────────────
 
   if (!hasFetched) {
-    return <Loader />
+    return (
+      <div className="diary-page" role="status" aria-live="polite">
+        <Loader />
+      </div>
+    )
   }
 
   if (!page && effectivePageId) {
     return (
-      <div className="diary-page">
+      <div className="diary-page" role="status" aria-live="polite">
         <div className="diary-page__empty">
           <h2>Загрузка записи...</h2>
         </div>
@@ -220,7 +224,7 @@ export const DiaryPage = () => {
 
   if (!effectivePageId) {
     return (
-      <div className="diary-page">
+      <div className="diary-page" role="status" aria-live="polite">
         <div className="diary-page__empty">
           <h2>Нет записей</h2>
           <button type="button" className="diary-page__create-btn-small" onClick={handleCreatePage}>
@@ -232,11 +236,11 @@ export const DiaryPage = () => {
   }
 
   return (
-    <div className="diary-page">
+    <div className="diary-page" role="main" aria-label="Дневник">
       {showToast && <ToastPortal message="Сохранено" onClose={() => setShowToast(false)} />}
 
       {/* Верхняя панель */}
-      <div className="diary-page__top-nav">
+      <div className="diary-page__top-nav" role="toolbar" aria-label="Управление страницей">
         <div className="diary-page__top-nav-left">
           {/* CustomSelect для выбора страницы */}
           <CustomSelect
@@ -247,14 +251,21 @@ export const DiaryPage = () => {
               label: `Страница ${index + 1}: ${p.title || 'Без названия'}`,
             }))}
             placeholder="Выберите страницу..."
+            aria-label="Выбор страницы"
           />
-          <button type="button" className="diary-page__create-btn-small" onClick={handleCreatePage}>
+          <button
+            type="button"
+            className="diary-page__create-btn-small"
+            onClick={handleCreatePage}
+            aria-label="Создать новую страницу"
+          >
             + Создать
           </button>
           <button
             type="button"
             className="diary-page__delete-btn"
             onClick={() => setShowDeleteConfirm(true)}
+            aria-label="Удалить текущую страницу"
           >
             Удалить страницу
           </button>
@@ -267,9 +278,15 @@ export const DiaryPage = () => {
 
       {/* Модалка подтверждения удаления */}
       {showDeleteConfirm && (
-        <div className="diary-page__modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+        <div
+          className="diary-page__modal-overlay"
+          onClick={() => setShowDeleteConfirm(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="diary-page-delete-dialog-title"
+        >
           <div className="diary-page__modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Удалить страницу?</h3>
+            <h3 id="diary-page-delete-dialog-title">Удалить страницу?</h3>
             <p>Это действие нельзя отменить. Все данные страницы будут удалены.</p>
             <div className="diary-page__modal-actions">
               <button
@@ -292,11 +309,12 @@ export const DiaryPage = () => {
       )}
 
       {/* Навигация по мыслям */}
-      <div className="diary-page__thoughts-nav">
+      <div className="diary-page__thoughts-nav" role="navigation" aria-label="Навигация по мыслям">
         <button
           type="button"
           className={`diary-page__thought-btn ${view === 'reveal' ? 'diary-page__thought-btn--active' : ''}`}
           onClick={handleRevealNav}
+          aria-current={view === 'reveal' ? 'page' : undefined}
         >
           Выявление
         </button>
@@ -312,12 +330,16 @@ export const DiaryPage = () => {
               : []
           }
           placeholder="Выберите мысль..."
+          aria-label="Выбор мысли для работы"
         />
       </div>
 
       {/* Контент с fade-эффектом */}
       <div
         className={`diary-page__content ${isTransitioning ? 'diary-page__content--fade-out' : ''}`}
+        role="region"
+        aria-label="Содержимое записи"
+        aria-live="polite"
       >
         <div key={contentKey} className="diary-page__content-inner">
           {view === 'reveal' && (

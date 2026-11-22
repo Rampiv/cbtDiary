@@ -1,3 +1,10 @@
+## 1.0.5
+### Changes
+- **Toast, ToastPortal, AuthPage, RevealPage, ThoughtWorkPage, DiaryPage, FAQPage, CognitiveDistortionsPage, HelpfulPage, ProfilePage** - доработана доступность a11y. Добавлены тесты.
+- **useDiary** - разбитие файла на несколько частей. Фикс багов автосейва.
+### Features
+- **AuthPage** - добавлена кнопка демо режима (авторизация на тестовом аккаунте)
+
 ## 1.0.4
 ### Fixes
 - **CustomSelect.test.tsx** - фикс неиспользуемой константы.

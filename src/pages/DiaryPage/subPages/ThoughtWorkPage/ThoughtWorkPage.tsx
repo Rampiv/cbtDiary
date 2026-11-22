@@ -24,13 +24,13 @@ export const ThoughtWorkPage = ({
   const work = page.thoughtWorks?.find((w) => w.thoughtId === thoughtId)
   const thought = page.thoughts?.find((t) => t.id === thoughtId)
 
-  if (!work || !thought) return <div>Мысль не найдена</div>
+  if (!work || !thought) return <div role="alert">Мысль не найдена</div>
 
   return (
     <div className="thought-work-page">
       <div className="reveal-page__title-section">
         <h2 className="reveal-page__title">Работа</h2>
-        <div className="thought-work-page__summary-table">
+      <div className="thought-work-page__summary-table" role="region" aria-label="Сводка мысли">
           <div className="thought-work-page__summary-row">
             <div className="thought-work-page__summary-col">
               <strong>Автоматическая мысль</strong>
@@ -80,6 +80,7 @@ export const ThoughtWorkPage = ({
               type="button"
               className="thought-work-page__info-btn"
               onClick={() => setShowSpecModal(true)}
+              aria-label="Что за конкретизация мысли?"
             >
               ?
             </button>
@@ -91,6 +92,7 @@ export const ThoughtWorkPage = ({
             }
             onBlur={autoSave}
             placeholder="Уточните мысль..."
+            aria-label="Конкретизация мысли"
           />
         </div>
 
@@ -104,6 +106,7 @@ export const ThoughtWorkPage = ({
               updateThoughtWork(thoughtId, (w) => ({ ...w, beliefScore: value }))
             }
             onChangeComplete={autoSave} 
+            aria-label="Уверенность в мысли"
             tooltip={{ formatter: (v) => `${v}%` }}
           />
         </div>
@@ -124,6 +127,7 @@ export const ThoughtWorkPage = ({
               }
               onBlur={autoSave}
               placeholder="Как эта мысль помогает вам?"
+              aria-label="Чем эта мысль помогает"
             />
           </div>
           <div className="thought-work-page__col">
@@ -138,6 +142,7 @@ export const ThoughtWorkPage = ({
               }
               onBlur={autoSave}
               placeholder="Как эта мысль мешает вам?"
+              aria-label="Как мысль усложняет жизнь"
             />
           </div>
         </div>
@@ -162,6 +167,7 @@ export const ThoughtWorkPage = ({
               }
               onBlur={autoSave}
               placeholder="Какие есть доказательства, что эта мысль верна?"
+              aria-label="Доказательства подтверждающие мысль"
             />
           </div>
           <div className="thought-work-page__col">
@@ -176,6 +182,7 @@ export const ThoughtWorkPage = ({
               }
               onBlur={autoSave}
               placeholder="Какие есть доказательства, что эта мысль ложна?"
+              aria-label="Доказательства опровергающие мысль"
             />
           </div>
         </div>
@@ -194,6 +201,7 @@ export const ThoughtWorkPage = ({
           }
           onBlur={autoSave}
           placeholder="Альтернативное объяснение..."
+          aria-label="Альтернативное объяснение"
         />
       </Accordion>
 
@@ -216,6 +224,7 @@ export const ThoughtWorkPage = ({
                 }))
               }
               onBlur={autoSave}
+              aria-label="Самый худший вариант"
             />
             <div className="thought-work-page__slider-field">
               <label>На сколько вы в это верите?</label>
@@ -233,6 +242,7 @@ export const ThoughtWorkPage = ({
                   }))
                 }
                 onChangeComplete={autoSave}
+                aria-label="Уверенность в худшем варианте"
                 tooltip={{ formatter: (v) => `${v}%` }}
               />
             </div>
@@ -254,6 +264,7 @@ export const ThoughtWorkPage = ({
                 }))
               }
               onBlur={autoSave}
+              aria-label="Самый лучший вариант"
             />
             <div className="thought-work-page__slider-field">
               <label>На сколько вы в это верите?</label>
@@ -271,6 +282,7 @@ export const ThoughtWorkPage = ({
                   }))
                 }
                 onChangeComplete={autoSave} 
+                aria-label="Уверенность в лучшем варианте"
                 tooltip={{ formatter: (v) => `${v}%` }}
               />
             </div>
@@ -290,6 +302,7 @@ export const ThoughtWorkPage = ({
                 }))
               }
               onBlur={autoSave}
+              aria-label="Самый реалистичный вариант"
             />
             <div className="thought-work-page__slider-field">
               <label>На сколько вы в это верите?</label>
@@ -307,6 +320,7 @@ export const ThoughtWorkPage = ({
                   }))
                 }
                 onChangeComplete={autoSave} 
+                aria-label="Уверенность в реалистичном варианте"
                 tooltip={{ formatter: (v) => `${v}%` }}
               />
             </div>
@@ -327,6 +341,7 @@ export const ThoughtWorkPage = ({
           }
           onBlur={autoSave}
           placeholder="Что бы вы сказали близкому человеку?"
+          aria-label="Дистанцирование"
         />
       </Accordion>
 
@@ -357,6 +372,7 @@ export const ThoughtWorkPage = ({
                   <input
                     type="checkbox"
                     checked={isSelected}
+                    aria-label={distortion.name}
                     onChange={(e) => {
                       if (e.target.checked) {
                         updateThoughtWork(thoughtId, (w) => ({
@@ -392,6 +408,7 @@ export const ThoughtWorkPage = ({
               }
               onBlur={autoSave}
               placeholder="Почему вы считаете, что эти когнитивные искажения присутствуют в вашей мысли?"
+              aria-label="Объяснение выбора когнитивных искажений"
             />
           </div>
         </div>
@@ -423,6 +440,7 @@ export const ThoughtWorkPage = ({
             }
             onBlur={autoSave}
             placeholder="Сформулируйте реалистичный ответ..."
+            aria-label="Реалистичный ответ"
           />
           <div className="thought-work-page__slider-field">
             <label>На сколько вы в это верите?</label>
@@ -437,6 +455,7 @@ export const ThoughtWorkPage = ({
                 }))
               }
               onChangeComplete={autoSave} 
+              aria-label="Уверенность в переформулировании"
               tooltip={{ formatter: (v) => `${v}%` }}
             />
           </div>
@@ -456,11 +475,12 @@ export const ThoughtWorkPage = ({
           }
           onBlur={autoSave}
           placeholder="План действий..."
+          aria-label="План действий"
         />
       </Accordion>
 
       {onNextThought && (
-        <button type="button" className="thought-work-page__next-btn" onClick={onNextThought}>
+        <button type="button" className="thought-work-page__next-btn" onClick={onNextThought} aria-label="Работать со следующей мыслью">
           Работать со следующей мыслью →
         </button>
       )}
@@ -476,8 +496,8 @@ export const ThoughtWorkPage = ({
         <table className="thought-work-page__modal-table">
           <thead>
             <tr>
-              <th>Интерпретация</th>
-              <th>Мысль</th>
+              <th scope="col">Интерпретация</th>
+              <th scope="col">Мысль</th>
             </tr>
           </thead>
           <tbody>
@@ -497,8 +517,8 @@ export const ThoughtWorkPage = ({
         <table className="thought-work-page__modal-table">
           <thead>
             <tr>
-              <th>Вопрос</th>
-              <th>Мысль</th>
+              <th scope="col">Вопрос</th>
+              <th scope="col">Мысль</th>
             </tr>
           </thead>
           <tbody>

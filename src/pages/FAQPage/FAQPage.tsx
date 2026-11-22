@@ -4,7 +4,7 @@ import './FAQPage.scss'
 
 export const FAQPage = () => {
   return (
-    <div className="faq-page">
+    <main className="faq-page" role="main" aria-label="Часто задаваемые вопросы">
       <h1 className="faq-page__title">Часто задаваемые вопросы</h1>
 
       <Accordion title="Для кого это приложение">
@@ -211,7 +211,12 @@ export const FAQPage = () => {
         </p>
 
         <u>
-          <Link to={'https://disk.yandex.ru/d/-2XK17za8gusVQ'} target="_blank">
+          <Link
+            to={'https://disk.yandex.ru/d/-2XK17za8gusVQ'}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Скачать Android-приложение (откроется в новой вкладке)"
+          >
             Ссылка на скачивание с Яндекс Диска
           </Link>
         </u>
@@ -224,19 +229,26 @@ export const FAQPage = () => {
         <p>
           <strong>Обратная связь: </strong>
           <u>
-            <Link to={'https://t.me/Rampiv'}>Телеграм</Link>
+            <Link to={'https://t.me/Rampiv'} aria-label="Написать в Telegram (откроется в новой вкладке)">
+              Телеграм
+            </Link>
           </u>
         </p>
         <p>
           <strong>Почта:</strong>{' '}
           <u>
-            <a href="mailto:inprikazchikov@bk.ru">inprikazchikov@bk.ru</a>
+            <a
+              href="mailto:inprikazchikov@bk.ru"
+              aria-label="Написать письмо на inprikazchikov@bk.ru"
+            >
+              inprikazchikov@bk.ru
+            </a>
           </u>
         </p>
         <p>
           <u>Сайт сделан не для коммерческого использования.</u>
         </p>
       </Accordion>
-    </div>
+    </main>
   )
 }

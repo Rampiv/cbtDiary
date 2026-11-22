@@ -1,3 +1,17 @@
+/**
+ * useDiary.test.ts — интеграционные тесты публичного API useDiary.
+ *
+ * Проверяет:
+ * - Инициализацию (null page, hasChanges=false, isSaving=false)
+ * - Загрузку страницы из Firebase (onValue → page data)
+ * - Наличие всех функций API (updatePage, autoSave, manualSave, addThought,
+ *   deleteThought, deletePage, startWorkOnThought, updateThoughtWork)
+ * - Структуру возвращаемого объекта (все ключи на месте)
+ *
+ * Моки: firebase/database (set, onValue, remove), firebase/config (auth).
+ * Не тестирует внутреннюю логику — только контракт с потребителями.
+ */
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useDiary } from './useDiary'

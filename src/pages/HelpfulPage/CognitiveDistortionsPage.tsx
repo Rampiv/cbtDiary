@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import './CognitiveDistortionsPage.scss'
 
-interface Distortion {
+export interface Distortion {
   id: string
   name: string
   text: string
   example: string
 }
 
-const distortions: Distortion[] = [
+export const distortions: Distortion[] = [
   {
     id: 'confirmation_bias',
     name: 'Предвзятость подтверждения',
@@ -93,12 +93,13 @@ export const CognitiveDistortionsPage = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="cognitive-distortions-page">
+    <div className="cognitive-distortions-page" role="main" aria-label="Когнитивные искажения">
       <div className="cognitive-distortions-page__header">
         <button
           type="button"
           className="cognitive-distortions-page__back-btn"
           onClick={() => navigate('/helpful')}
+          aria-label="Вернуться в раздел Полезное"
         >
           ← В полезное
         </button>
@@ -110,15 +111,20 @@ export const CognitiveDistortionsPage = () => {
         </p>
       </div>
 
-      <div className="cognitive-distortions-page__list">
+      <div className="cognitive-distortions-page__list" role="region" aria-label="Список когнитивных искажений">
         {distortions.map((distortion) => (
-          <div key={distortion.id} className="cognitive-distortions-page__item">
+          <article
+            key={distortion.id}
+            data-id={distortion.id}
+            className="cognitive-distortions-page__item"
+            aria-label={distortion.name}
+          >
             <h2 className="cognitive-distortions-page__item-title">{distortion.name}</h2>
             <p className="cognitive-distortions-page__item-text">{distortion.text}</p>
-            <div className="cognitive-distortions-page__item-example">
+            <div className="cognitive-distortions-page__item-example" role="note" aria-label="Пример">
               <strong>Пример:</strong> {distortion.example}
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </div>

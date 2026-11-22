@@ -130,6 +130,27 @@
     &:active {
       transform: translateY(0);
     }
+
+    &--demo {
+      background: transparent;
+      color: $main;
+      border: 2px solid $main;
+      box-shadow: none;
+      margin: 0;
+
+      &:hover:not(:disabled) {
+        background: $main;
+        color: $white;
+        box-shadow: 0 3px 10px rgba($main, 0.3);
+      }
+
+      &:disabled {
+        background: transparent;
+        color: $mainDisabled;
+        border-color: $mainDisabled;
+        box-shadow: none;
+      }
+    }
   }
 
   &__back-header {

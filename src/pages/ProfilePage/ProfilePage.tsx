@@ -110,24 +110,26 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
   }
 
   return (
-    <div className="profile-page">
+    <div className="profile-page" role="main" aria-label="Профиль пользователя">
       {toast && (
         <ToastPortal message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
       {/* Информация о пользователе */}
-      <section className="profile-page__section">
-        <h2 className="profile-page__section-title">Профиль</h2>
+      <section className="profile-page__section" aria-labelledby="profile-section-title">
+        <h2 id="profile-section-title" className="profile-page__section-title">Профиль</h2>
         <div className="profile-page__info">
           <div className="profile-page__info-row">
-            <span className="profile-page__info-label">Email:</span>
-            <span className="profile-page__info-value">{user?.email || 'Не указан'}</span>
+            <span className="profile-page__info-label" id="email-label">Email:</span>
+            <span className="profile-page__info-value" aria-labelledby="email-label">
+              {user?.email || 'Не указан'}
+            </span>
           </div>
         </div>
       </section>
 
       {/* Тема оформления */}
-      <section className="profile-page__section">
-        <h2 className="profile-page__section-title">Тема оформления</h2>
+      <section className="profile-page__section" aria-labelledby="theme-section-title">
+        <h2 id="theme-section-title" className="profile-page__section-title">Тема оформления</h2>
         <div className="profile-page__theme-toggle">
           <label className="profile-page__toggle-label">
             <span className="profile-page__toggle-text">
@@ -151,24 +153,31 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
       </section>
 
       {/* Смена пароля */}
-      <section className="profile-page__section">
-        <h2 className="profile-page__section-title">Смена пароля</h2>
-        <form className="profile-page__form" onSubmit={handleChangePassword}>
+      <section className="profile-page__section" aria-labelledby="password-section-title">
+        <h2 id="password-section-title" className="profile-page__section-title">Смена пароля</h2>
+        <form className="profile-page__form" onSubmit={handleChangePassword} noValidate>
           <div className="profile-page__field">
-            <label className="profile-page__label">Текущий пароль</label>
+            <label className="profile-page__label" htmlFor="current-password">Текущий пароль</label>
             <div className="profile-page__input-wrapper">
               <input
+                id="current-password"
                 type={showPassword ? 'text' : 'password'}
                 className="profile-page__input"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
                 disabled={isLoading}
+                aria-required="true"
+                aria-describedby="current-password-hint"
               />
+              <span id="current-password-hint" className="sr-only">
+                Введите текущий пароль для подтверждения
+              </span>
               <button
                 type="button"
                 className="profile-page__toggle-password"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
                 tabIndex={-1}
               >
                 {showPassword ? '🙈' : '👁'}
@@ -177,8 +186,9 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
           </div>
 
           <div className="profile-page__field">
-            <label className="profile-page__label">Новый пароль</label>
+            <label className="profile-page__label" htmlFor="new-password">Новый пароль</label>
             <input
+              id="new-password"
               type={showPassword ? 'text' : 'password'}
               className="profile-page__input"
               value={newPassword}
@@ -186,12 +196,18 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
               required
               minLength={6}
               disabled={isLoading}
+              aria-required="true"
+              aria-describedby="new-password-hint"
             />
+            <span id="new-password-hint" className="sr-only">
+              Минимум 6 символов
+            </span>
           </div>
 
           <div className="profile-page__field">
-            <label className="profile-page__label">Подтвердите новый пароль</label>
+            <label className="profile-page__label" htmlFor="confirm-password">Подтвердите новый пароль</label>
             <input
+              id="confirm-password"
               type={showPassword ? 'text' : 'password'}
               className="profile-page__input"
               value={confirmPassword}
@@ -199,7 +215,12 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
               required
               minLength={6}
               disabled={isLoading}
+              aria-required="true"
+              aria-describedby="confirm-password-hint"
             />
+            <span id="confirm-password-hint" className="sr-only">
+              Введите пароль ещё раз
+            </span>
           </div>
 
           <button type="submit" className="profile-page__submit" disabled={isLoading}>
@@ -209,11 +230,13 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
       </section>
 
       {/* Экспорт в docx */}
-      <section className="profile-page__section">
-        <h2 className="profile-page__section-title">Экспорт в docx</h2>
+      <section className="profile-page__section" aria-labelledby="export-section-title">
+        <h2 id="export-section-title" className="profile-page__section-title">Экспорт в docx</h2>
 
         {pages.length === 0 ? (
-          <p className="profile-page__empty">У вас пока нет записей для экспорта</p>
+          <p className="profile-page__empty" role="status" aria-live="polite">
+            У вас пока нет записей для экспорта
+          </p>
         ) : (
           <>
             <button
@@ -221,13 +244,14 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
               className="profile-page__download-all"
               onClick={handleDownloadAll}
               disabled={isGenerating}
+              aria-label={`Скачать все страницы (${pages.length})`}
             >
               {isGenerating ? (
                 <>
-                  <span>
+                  <span aria-live="polite">
                     Создание docx... {progress.current}/{progress.total}
                   </span>
-                  <div className="profile-page__progress-bar">
+                  <div className="profile-page__progress-bar" role="progressbar" aria-valuenow={progress.current} aria-valuemin={0} aria-valuemax={progress.total} aria-label="Прогресс экспорта">
                     <div
                       className="profile-page__progress-fill"
                       style={{
@@ -250,12 +274,14 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
                   label: `Страница ${sortedPages.length - index}${p.title ? ` – ${p.title}` : ''}`,
                 }))}
                 placeholder="Выберите страницу..."
+                aria-label="Выбор страницы для экспорта"
               />
               <button
                 type="button"
                 className="profile-page__download-selected"
                 onClick={handleDownloadSelected}
                 disabled={isGenerating || !selectedPageId}
+                aria-label="Скачать выбранную страницу"
               >
                 📄 Скачать выбранную
               </button>
@@ -265,9 +291,13 @@ export const ProfilePage = ({ pages, sortedPages }: ProfilePageProps) => {
       </section>
 
       {/* Политика конфиденциальности */}
-      <section className="profile-page__section profile-page__section--footer">
-        <h2 className="profile-page__section-title">Правовая информация</h2>
-        <a href="/privacy" className="profile-page__privacy-link">
+      <section className="profile-page__section profile-page__section--footer" aria-labelledby="legal-section-title">
+        <h2 id="legal-section-title" className="profile-page__section-title">Правовая информация</h2>
+        <a
+          href="/privacy"
+          className="profile-page__privacy-link"
+          aria-label="Политика конфиденциальности (откроется в новой вкладке)"
+        >
           📋 Политика конфиденциальности
         </a>
       </section>

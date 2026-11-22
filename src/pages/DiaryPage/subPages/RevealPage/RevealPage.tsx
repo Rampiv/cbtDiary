@@ -51,11 +51,13 @@ export const RevealPage = ({
         <p className="reveal-page__hint">Введите название для этой записи (необязательно)</p>
         <input
           type="text"
+          id="reveal-page-title-input"
           className="reveal-page__title-input"
           placeholder="Например: Тревога на работе"
           value={page.title || ''}
           onChange={(e) => handleTitleChange(e.target.value)}
           onBlur={autoSave}
+          aria-label="Название страницы"
         />
       </div>
 
@@ -85,6 +87,7 @@ export const RevealPage = ({
               type="button"
               className="reveal-page__info-btn"
               onClick={() => setShowSituationModal(true)}
+              aria-label="Что за ситуация?"
             >
               ?
             </button>
@@ -101,37 +104,40 @@ export const RevealPage = ({
         <table className="reveal-page__thoughts-table">
           <thead>
             <tr>
-              <th className="reveal-page__table-col reveal-page__table-col_header">
+              <th className="reveal-page__table-col reveal-page__table-col_header" scope="col">
                 <div className="reveal-page__col-header">
                   <span>Автоматическая мысль</span>
                   <button
                     type="button"
                     className="reveal-page__info-btn reveal-page__info-btn--header"
                     onClick={() => setShowHeaderThoughtModal(true)}
+                    aria-label="Что за автоматическая мысль?"
                   >
                     ?
                   </button>
                 </div>
               </th>
-              <th className="reveal-page__table-col reveal-page__table-col_header">
+              <th className="reveal-page__table-col reveal-page__table-col_header" scope="col">
                 <div className="reveal-page__col-header">
                   <span>Эмоциональная реакция</span>
                   <button
                     type="button"
                     className="reveal-page__info-btn reveal-page__info-btn--header"
                     onClick={() => setShowHeaderEmotionModal(true)}
+                    aria-label="Что за эмоциональная реакция?"
                   >
                     ?
                   </button>
                 </div>
               </th>
-              <th className="reveal-page__table-col reveal-page__table-col_header">
+              <th className="reveal-page__table-col reveal-page__table-col_header" scope="col">
                 <div className="reveal-page__col-header">
                   <span>Поведенческая реакция</span>
                   <button
                     type="button"
                     className="reveal-page__info-btn reveal-page__info-btn--header"
                     onClick={() => setShowHeaderBehaviorModal(true)}
+                    aria-label="Что за поведенческая реакция?"
                   >
                     ?
                   </button>
@@ -147,19 +153,20 @@ export const RevealPage = ({
                     <div className="reveal-page__mobile-header">
                       <span>Автоматическая мысль</span>
                       <div className="reveal-page__mobile-header-actions">
-                        <button
-                          type="button"
-                          className="reveal-page__info-btn"
-                          onClick={() => setShowHeaderThoughtModal(true)}
-                        >
-                          ?
-                        </button>
-                        <button
-                          type="button"
-                          className="reveal-page__delete-thought-btn"
-                          onClick={() => setShowDeleteConfirm(thought.id)}
-                          title="Удалить мысль"
-                        >
+                      <button
+                        type="button"
+                        className="reveal-page__info-btn"
+                        onClick={() => setShowHeaderThoughtModal(true)}
+                        aria-label="Что за автоматическая мысль?"
+                      >
+                        ?
+                      </button>
+                      <button
+                        type="button"
+                        className="reveal-page__delete-thought-btn"
+                        onClick={() => setShowDeleteConfirm(thought.id)}
+                        aria-label="Удалить мысль"
+                      >
                           🗑️
                         </button>
                       </div>
@@ -178,7 +185,7 @@ export const RevealPage = ({
                         type="button"
                         className="reveal-page__delete-thought-btn reveal-page__delete-thought-btn_desctop"
                         onClick={() => setShowDeleteConfirm(thought.id)}
-                        title="Удалить мысль"
+                        aria-label="Удалить мысль"
                       >
                         Удалить мысль
                       </button>
@@ -187,11 +194,12 @@ export const RevealPage = ({
                   <td className="reveal-page__table-col">
                     <div className="reveal-page__mobile-header">
                       <span>Эмоциональная реакция</span>
-                      <button
-                        type="button"
-                        className="reveal-page__info-btn"
-                        onClick={() => setShowHeaderEmotionModal(true)}
-                      >
+                    <button
+                      type="button"
+                      className="reveal-page__info-btn"
+                      onClick={() => setShowHeaderEmotionModal(true)}
+                      aria-label="Что за эмоциональная реакция?"
+                    >
                         ?
                       </button>
                     </div>
@@ -215,6 +223,7 @@ export const RevealPage = ({
                                 })
                               }
                               onBlur={autoSave}
+                              aria-label={`Название эмоции ${emotionIndex + 1}`}
                             />
                             {thought.emotion.length > 1 && (
                               <button
@@ -274,6 +283,7 @@ export const RevealPage = ({
                             emotion: [...(t.emotion || []), { name: '', intensity: 0 }],
                           }))
                         }
+                        aria-label="Добавить эмоцию"
                       >
                         + Добавить эмоцию
                       </button>
@@ -282,11 +292,12 @@ export const RevealPage = ({
                   <td className="reveal-page__table-col">
                     <div className="reveal-page__mobile-header">
                       <span>Поведенческая реакция</span>
-                      <button
-                        type="button"
-                        className="reveal-page__info-btn"
-                        onClick={() => setShowHeaderBehaviorModal(true)}
-                      >
+                    <button
+                      type="button"
+                      className="reveal-page__info-btn"
+                      onClick={() => setShowHeaderBehaviorModal(true)}
+                      aria-label="Что за поведенческая реакция?"
+                    >
                         ?
                       </button>
                     </div>
@@ -304,7 +315,7 @@ export const RevealPage = ({
           </tbody>
         </table>
 
-        <button type="button" className="reveal-page__add-btn" onClick={addThought}>
+        <button type="button" className="reveal-page__add-btn" onClick={addThought} aria-label="Добавить мысль">
           + Добавить мысль
         </button>
 
@@ -312,11 +323,12 @@ export const RevealPage = ({
           {page.thoughts &&
             page.thoughts.map((thought, index) => (
               <div key={thought.id} className="reveal-page__action-row">
-                <button
-                  type="button"
-                  className="reveal-page__work-btn"
-                  onClick={() => onWorkClick?.(thought.id) || startWorkOnThought(thought.id)}
-                >
+                  <button
+                    type="button"
+                    className="reveal-page__work-btn"
+                    onClick={() => onWorkClick?.(thought.id) || startWorkOnThought(thought.id)}
+                    aria-label={`Работать с мыслью ${index + 1}`}
+                  >
                   Работать с мыслью {index + 1}
                 </button>
               </div>
@@ -325,9 +337,15 @@ export const RevealPage = ({
 
         {/* Модалка подтверждения удаления мысли */}
         {showDeleteConfirm && (
-          <div className="reveal-page__modal-overlay" onClick={() => setShowDeleteConfirm(null)}>
+          <div
+            className="reveal-page__modal-overlay"
+            onClick={() => setShowDeleteConfirm(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reveal-page-delete-dialog-title"
+          >
             <div className="reveal-page__modal" onClick={(e) => e.stopPropagation()}>
-              <h3>Удалить мысль?</h3>
+              <h3 id="reveal-page-delete-dialog-title">Удалить мысль?</h3>
               <p>Это действие нельзя отменить. Все данные мысли будут удалены.</p>
               <div className="reveal-page__modal-actions">
                 <button
